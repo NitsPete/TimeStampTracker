@@ -215,6 +215,9 @@
        <layout class="QHBoxLayout" name="horizontalLayout_inputs">
         <item>
          <widget class="QPushButton" name="pushButton_come">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -234,6 +237,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_go">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>

@@ -4,8 +4,11 @@
 #include <QMainWindow>
 #include <QDateTime>
 #include <QTimer>
+#include <QList>
 
 #include <QDebug>
+
+#include "excelinterface.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -22,6 +25,10 @@ public:
 private:
     Ui::MainWindow *ui;
     QTimer *timer_updateDateTime;
+    QList<Employee> list_employee;
+
+    void initDateTimeLabel();
+    void initEmployeeList();
 
 private slots:
     void updateDateTime();
