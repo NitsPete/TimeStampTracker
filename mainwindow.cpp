@@ -39,8 +39,33 @@ void MainWindow::initEmployeeList()
 
     for(Employee employee : list_employee)
     {
-        ui->verticalLayout_mainLeft->addWidget(new QPushButton(employee.getButtonText()));
+        QPushButton *tmpButton = new QPushButton(employee.getButtonText());
+        connect(tmpButton, &QPushButton::clicked, this, [this, tmpButton]()
+        {pushButton_employee_clicked(tmpButton->text());});
+        ui->verticalLayout_mainLeft->addWidget(tmpButton);
     }
+}
+
+// toDo hier weiter machen und die infos in die gui laden
+void MainWindow::loadEmployee(Employee *employee)
+{
+    if(employee == nullptr)
+    {
+        qDebug() << "loadEmployee: nullptr exception!";
+        return;
+    }
+
+    qDebug() << employee->getName();
+
+    if(employee->employeeIsCheckedIn())
+    {
+        qDebug() << "Is checked  in!";
+    }else
+    {
+        qDebug() << "Is not cheked in!";
+    }
+
+    // toDo diese funktion fertig programmieren anhand diesr können dann auch die button angepasst werden; vllt muss hier auch eher der button übergeben werden?
 }
 
 
@@ -48,5 +73,20 @@ void MainWindow::updateDateTime()
 {
     ui->label_time->setText(QTime::currentTime().toString("HH:mm:ss"));
     ui->label_date->setText(QDate::currentDate().toString("dd.MM.yyyy"));
+}
+
+void MainWindow::pushButton_employee_clicked(const QString &buttonText)
+{
+    unsigned int uniqueId = buttonText.split(":").first().toUInt();
+
+    Employee *clickedEmployee = nullptr;
+    for(Employee &employee : list_employee)
+    {
+        if(uniqueId == employee.getUniqueId())
+        {
+            clickedEmployee = &employee;
+        }
+    }
+    loadEmployee(clickedEmployee);
 }
 

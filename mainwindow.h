@@ -29,8 +29,10 @@ private:
 
     void initDateTimeLabel();
     void initEmployeeList();
+    void loadEmployee(Employee *employee);
 
 private slots:
     void updateDateTime();
+    void pushButton_employee_clicked(const QString &buttonText);
 };
 #endif // MAINWINDOW_H
