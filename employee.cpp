@@ -75,7 +75,7 @@ QString Employee::getName()
 
 QString Employee::getButtonText()
 {
-    // don't delete ':' after uniqueId because of MainWindow::pushButton_employee_clicked
+    // don't delete ':' after uniqueId because of MainWindow::pushButton_employee_clicked + MainWindow::setPushButtonEmployeeColor
     return QString::number(uniqueId) + ": " + name;
 }
 

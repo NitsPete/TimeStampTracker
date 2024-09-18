@@ -25,13 +25,21 @@ public:
 private:
     Ui::MainWindow *ui;
     QTimer *timer_updateDateTime;
+    Employee *currentEmployee = nullptr;
     QList<Employee> list_employee;
+
+    const QString BUTTON_COLOR_RED = "QPushButton { background-color: red;}";
+    const QString BUTTON_COLOR_GREEN = "QPushButton { background-color: green;}";
 
     void initDateTimeLabel();
     void initEmployeeList();
+    void setPushButtonEmployeeColor(Employee *employee);
     void loadEmployee(Employee *employee);
 
 private slots:
+    void pushButton_come_clicked();
+    void pushButton_go_clicked();
+
     void updateDateTime();
     void pushButton_employee_clicked(const QString &buttonText);
 };

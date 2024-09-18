@@ -44,15 +44,15 @@ Employee ExcelInterface::getEmployee(unsigned int number)
     list_employee.append(Employee(8, true, "", "63,5 h", "6543,4 h")); // Zeigt Ende an weil der name leer ist ->  bedeutet dass die excel zelle leer ist
 
     // Ist nicht eingecheckt -> checked out
-    list_employee[0].addCheckInTime(QTime(3, 30));
-    list_employee[0].addCheckInTime(QTime(7, 30));
-    list_employee[0].addCheckInTime(QTime(11, 30));
-    list_employee[0].addCheckInTime(QTime(16, 30));
+    list_employee[0].addCheckInTime(QTime(0, 30));
+    list_employee[0].addCheckInTime(QTime(2, 30));
+    list_employee[0].addCheckInTime(QTime(4, 30));
+    list_employee[0].addCheckInTime(QTime(6, 30));
 
-    list_employee[0].addCheckOutTime(QTime(4, 30));
-    list_employee[0].addCheckOutTime(QTime(8, 17));
-    list_employee[0].addCheckOutTime(QTime(14, 23));
-    list_employee[0].addCheckOutTime(QTime(20, 30));
+    list_employee[0].addCheckOutTime(QTime(1, 30));
+    list_employee[0].addCheckOutTime(QTime(3, 17));
+    list_employee[0].addCheckOutTime(QTime(5, 23));
+    list_employee[0].addCheckOutTime(QTime(7, 30));
 
     // Ist nicht eingecheckt darf aber selber einchecken -> checked out, allowed to check in
     // empty list by employee[1]

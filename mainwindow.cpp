@@ -7,6 +7,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    connect(ui->pushButton_come, &QPushButton::clicked, this, &MainWindow::pushButton_come_clicked);
+    connect(ui->pushButton_go, &QPushButton::clicked, this, &MainWindow::pushButton_go_clicked);
+
     initDateTimeLabel();
 
     initEmployeeList();
@@ -37,13 +40,67 @@ void MainWindow::initEmployeeList()
         delete item;
     }
 
-    for(Employee employee : list_employee)
+    for(Employee &employee : list_employee)
     {
         QPushButton *tmpButton = new QPushButton(employee.getButtonText());
         connect(tmpButton, &QPushButton::clicked, this, [this, tmpButton]()
         {pushButton_employee_clicked(tmpButton->text());});
         ui->verticalLayout_mainLeft->addWidget(tmpButton);
+
+        setPushButtonEmployeeColor(&employee);
     }
+}
+
+void MainWindow::setPushButtonEmployeeColor(Employee *employee)
+{
+    for(int i = 0; i < ui->verticalLayout_mainLeft->count(); ++i)
+    {
+        QWidget *widget = ui->verticalLayout_mainLeft->itemAt(i)->widget();
+
+        if (QPushButton *button = qobject_cast<QPushButton*>(widget))
+        {
+            if(button->text().startsWith(QString::number(employee->getUniqueId()) + ":"))
+            {
+                if(employee->employeeIsCheckedIn())
+                {
+                    button->setStyleSheet(BUTTON_COLOR_RED);
+                    ui->pushButton_come->setEnabled(false);
+                    ui->pushButton_go->setEnabled(true);
+                    return;
+                }else
+                {
+                    button->setStyleSheet(BUTTON_COLOR_GREEN);
+                    ui->pushButton_come->setEnabled(true);
+                    ui->pushButton_go->setEnabled(false);
+                    return;
+                }
+            }
+        }
+    }
+}
+
+void MainWindow::pushButton_come_clicked()
+{
+    if(currentEmployee == nullptr)
+    {
+        qDebug() << "pushButton_come_clicked: nullptr exception!";
+        return;
+    }
+
+    currentEmployee->addCheckInTime(QTime::currentTime());
+    setPushButtonEmployeeColor(currentEmployee);
+}
+
+void MainWindow::pushButton_go_clicked()
+{
+    if(currentEmployee == nullptr)
+    {
+        qDebug() << "pushButton_go_clicked: nullptr exception!";
+        return;
+    }
+
+    currentEmployee->addCheckOutTime(QTime::currentTime());
+    setPushButtonEmployeeColor(currentEmployee);
 }
 
 // toDo hier weiter machen und die infos in die gui laden
@@ -55,19 +112,25 @@ void MainWindow::loadEmployee(Employee *employee)
         return;
     }
 
-    qDebug() << employee->getName();
+    currentEmployee = employee;
 
     if(employee->employeeIsCheckedIn())
     {
-        qDebug() << "Is checked  in!";
+        ui->pushButton_come->setEnabled(false);
+        ui->pushButton_go->setEnabled(true);
     }else
     {
-        qDebug() << "Is not cheked in!";
+        ui->pushButton_come->setEnabled(true);
+        ui->pushButton_go->setEnabled(false);
     }
 
-    // toDo diese funktion fertig programmieren anhand diesr können dann auch die button angepasst werden; vllt muss hier auch eher der button übergeben werden?
-}
+    // toDo come and go button sollen ne zeit schreiben und die farbe ändern sowohl enabled tauschen
 
+
+    // toDo hier noch die woche und saison zeit laden + die tabelle
+    // toDo outlog out von einen user machen?
+
+}
 
 void MainWindow::updateDateTime()
 {
