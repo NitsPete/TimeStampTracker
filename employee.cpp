@@ -68,6 +68,16 @@ bool Employee::employeeIsCheckedIn()
 
 }
 
+bool Employee::getAllowed2CheckIn()
+{
+    return this->allowed2CheckIn;
+}
+
+bool Employee::getBossSetsMorningTime()
+{
+    return this->bossSetsMorningTime;
+}
+
 QString Employee::getName()
 {
     return this->name;
@@ -77,6 +87,16 @@ QString Employee::getButtonText()
 {
     // don't delete ':' after uniqueId because of MainWindow::pushButton_employee_clicked + MainWindow::setPushButtonEmployeeColor
     return QString::number(uniqueId) + ": " + name;
+}
+
+QStringList Employee::getList_checkInToday()
+{
+    return list_checkInToday;
+}
+
+QStringList Employee::getList_checkOutToday()
+{
+    return list_checkOutToday;
 }
 
 unsigned int Employee::getUniqueId()

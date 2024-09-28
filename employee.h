@@ -14,8 +14,12 @@ public:
 
     bool employeeIsCheckedIn();
 
+    bool getAllowed2CheckIn();
+    bool getBossSetsMorningTime();
     QString getName();
     QString getButtonText(); // <uniqueId>: <name>
+    QStringList getList_checkInToday();
+    QStringList getList_checkOutToday();
     unsigned int getUniqueId();
 
     void setBossSetsMorningTime(bool bossSetsMorningTime);

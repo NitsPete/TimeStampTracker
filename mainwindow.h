@@ -5,6 +5,8 @@
 #include <QDateTime>
 #include <QTimer>
 #include <QList>
+#include <QStandardItemModel>
+#include <QScrollBar>
 
 #include <QDebug>
 
@@ -35,6 +37,7 @@ private:
     void initEmployeeList();
     void setPushButtonEmployeeColor(Employee *employee);
     void loadEmployee(Employee *employee);
+    void loadTableView(Employee *employee);
 
 private slots:
     void pushButton_come_clicked();

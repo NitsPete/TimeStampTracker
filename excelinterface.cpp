@@ -48,11 +48,17 @@ Employee ExcelInterface::getEmployee(unsigned int number)
     list_employee[0].addCheckInTime(QTime(2, 30));
     list_employee[0].addCheckInTime(QTime(4, 30));
     list_employee[0].addCheckInTime(QTime(6, 30));
+    list_employee[0].addCheckInTime(QTime(8, 30));
+    list_employee[0].addCheckInTime(QTime(10, 30));
+    list_employee[0].addCheckInTime(QTime(12, 30));
 
     list_employee[0].addCheckOutTime(QTime(1, 30));
     list_employee[0].addCheckOutTime(QTime(3, 17));
     list_employee[0].addCheckOutTime(QTime(5, 23));
     list_employee[0].addCheckOutTime(QTime(7, 30));
+    list_employee[0].addCheckOutTime(QTime(9, 17));
+    list_employee[0].addCheckOutTime(QTime(11, 23));
+    list_employee[0].addCheckOutTime(QTime(13, 30));
 
     // Ist nicht eingecheckt darf aber selber einchecken -> checked out, allowed to check in
     // empty list by employee[1]

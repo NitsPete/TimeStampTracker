@@ -210,7 +210,7 @@
      </layout>
     </item>
     <item row="0" column="1">
-     <layout class="QVBoxLayout" name="verticalLayout_mainRight" stretch="2,1,2">
+     <layout class="QVBoxLayout" name="verticalLayout_mainRight" stretch="2,1,0,2">
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_inputs">
         <item>
@@ -319,6 +319,59 @@
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Hier steht ein platzhalter Text.&lt;/p&gt;&lt;p&gt;In diesem Bereich werden nützliche Informationen ausgegeben wie z.B.:&lt;/p&gt;&lt;p&gt;Summe der gearbeiteten Tage in der Woche/Saison&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_workTime" stretch="6,2,8,3,8,4,8">
+        <item>
+         <widget class="QLabel" name="label_sum">
+          <property name="text">
+           <string>Summe: </string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_day">
+          <property name="text">
+           <string>Tag =</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_timeDay">
+          <property name="text">
+           <string>8,12 h </string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_week">
+          <property name="text">
+           <string>Woche = </string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_timeWeek">
+          <property name="text">
+           <string>40,34 h</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_season">
+          <property name="text">
+           <string>Saision =</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_timeSeason">
+          <property name="text">
+           <string>1600,56 h</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <widget class="QTableView" name="tableView_timeStamps"/>

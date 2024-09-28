@@ -124,12 +124,61 @@ void MainWindow::loadEmployee(Employee *employee)
         ui->pushButton_go->setEnabled(false);
     }
 
-    // toDo come and go button sollen ne zeit schreiben und die farbe ändern sowohl enabled tauschen
+    loadTableView(employee);
 
-
-    // toDo hier noch die woche und saison zeit laden + die tabelle
+    // toDo TabelleLaden
+    // toDo Überlegen was in das output window angezeigt werden soll + hier noch die woche und saison zeit laden
     // toDo outlog out von einen user machen?
 
+}
+
+void MainWindow::loadTableView(Employee *employee)
+{
+    unsigned int columns = qMax(employee->getList_checkInToday().length(), employee->getList_checkOutToday().length());
+    QStandardItemModel *model = new QStandardItemModel(2, columns, ui->tableView_timeStamps);
+
+    model->setHeaderData(0, Qt::Vertical, QObject::tr("Anfang"));
+    model->setHeaderData(1, Qt::Vertical, QObject::tr("Ende"));
+
+    for(unsigned int i = 0; i < columns; ++i)
+    {
+        model->setHeaderData(i, Qt::Horizontal, QObject::tr(QString::number(i+1).toStdString().c_str()));
+    }
+
+    // Insert start times
+    for(int i = 0; i < employee->getList_checkInToday().length(); ++i)
+    {
+        if(!employee->getAllowed2CheckIn() && !employee->getBossSetsMorningTime())
+        {
+            model->setData(model->index(0, i+1), employee->getList_checkInToday().at(i));
+        }else
+        {
+            model->setData(model->index(0, i), employee->getList_checkInToday().at(i));
+        }
+    }
+
+    // Insert end times
+    for(int i = 0; i < employee->getList_checkOutToday().length(); ++i)
+    {
+        model->setData(model->index(1, i), employee->getList_checkOutToday().at(i));
+    }
+
+    for (int row = 0; row < model->rowCount(); ++row) {
+        for (int column = 0; column < model->columnCount(); ++column) {
+            QStandardItem *item = model->item(row, column);
+            if (item) {
+                item->setTextAlignment(Qt::AlignCenter);
+            }
+        }
+    }
+
+    //toDo der scrollbar verschwindet manchmal
+    //toDo die tabelle muss bei jeden neuen Zeiteintrag geupdatet werden (schauen wie am besten (signal in der employye classe bei add time?
+
+    ui->tableView_timeStamps->setModel(model);
+    ui->tableView_timeStamps->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableView_timeStamps->setEditTriggers(QAbstractItemView::NoEditTriggers); // toDo
+    ui->tableView_timeStamps->show();
 }
 
 void MainWindow::updateDateTime()
