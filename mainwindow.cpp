@@ -10,6 +10,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushButton_come, &QPushButton::clicked, this, &MainWindow::pushButton_come_clicked);
     connect(ui->pushButton_go, &QPushButton::clicked, this, &MainWindow::pushButton_go_clicked);
 
+    ui->label_timeDay->setText("");
+    ui->label_timeWeek->setText("");
+    ui->label_timeSeason->setText("");
+
     initDateTimeLabel();
 
     initEmployeeList();
@@ -124,7 +128,9 @@ void MainWindow::loadEmployee(Employee *employee)
         ui->pushButton_go->setEnabled(false);
     }
 
-    loadTableView(employee);
+    ui->label_timeDay->setText(employee->getTotalTimeToday());
+    ui->label_timeWeek->setText(employee->getTotalTimeWeek());
+    ui->label_timeSeason->setText(employee->getTotalTimeSeason());
 
     // toDo TabelleLaden
     // toDo Überlegen was in das output window angezeigt werden soll + hier noch die woche und saison zeit laden

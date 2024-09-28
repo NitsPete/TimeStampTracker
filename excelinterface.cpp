@@ -33,15 +33,15 @@ Employee ExcelInterface::getEmployee(unsigned int number)
     // ToDo: Only contains test code at the moment
     QList<Employee> list_employee;
 
-    list_employee.append(Employee(1, true, "Mustermann Max", "3,5 h", "543,4 h"));
-    list_employee.append(Employee(2, true, "AMustermann Max", "13,5 h", "1543,4 h"));
-    list_employee.append(Employee(3, true, "BMustermann Max", "23,5 h", "2543,4 h"));
-    list_employee.append(Employee(4, false, "CMustermann Max", "33,5 h", "3543,4 h"));
-    list_employee.append(Employee(5, false, "DMustermann Max", "43,5 h", "4543,4 h"));
-    list_employee.append(Employee(6, false, "EMustermann Max", "53,5 h", "5543,4 h"));
-    list_employee.append(Employee(7, false, "FMustermann Max", "63,5 h", "6543,4 h"));
-    list_employee.append(Employee(8, false, "GMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(8, true, "", "63,5 h", "6543,4 h")); // Zeigt Ende an weil der name leer ist ->  bedeutet dass die excel zelle leer ist
+    list_employee.append(Employee(1, true, "Mustermann Max", "3,5 h", "40,1 h", "543,4 h"));
+    list_employee.append(Employee(2, true, "AMustermann Max", "13,5 h", "40,2 h", "1543,4 h"));
+    list_employee.append(Employee(3, true, "BMustermann Max", "23,5 h", "40,3 h", "2543,4 h"));
+    list_employee.append(Employee(4, false, "CMustermann Max", "33,5 h", "40,4 h", "3543,4 h"));
+    list_employee.append(Employee(5, false, "DMustermann Max", "43,5 h", "40,5 h", "4543,4 h"));
+    list_employee.append(Employee(6, false, "EMustermann Max", "53,5 h", "40,6 h", "5543,4 h"));
+    list_employee.append(Employee(7, false, "FMustermann Max", "63,5 h", "40,7 h", "6543,4 h"));
+    list_employee.append(Employee(8, false, "GMustermann Max", "73,5 h", "40,8 h", "7543,4 h"));
+    list_employee.append(Employee(8, true, "", "63,5 h", "123,4 h", "6543,4 h")); // Zeigt Ende an weil der name leer ist ->  bedeutet dass die excel zelle leer ist
 
     // Ist nicht eingecheckt -> checked out
     list_employee[0].addCheckInTime(QTime(0, 30));
