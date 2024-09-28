@@ -132,6 +132,8 @@ void MainWindow::loadEmployee(Employee *employee)
     ui->label_timeWeek->setText(employee->getTotalTimeWeek());
     ui->label_timeSeason->setText(employee->getTotalTimeSeason());
 
+    loadTableView(employee);
+
     // toDo TabelleLaden
     // toDo Überlegen was in das output window angezeigt werden soll + hier noch die woche und saison zeit laden
     // toDo outlog out von einen user machen?
