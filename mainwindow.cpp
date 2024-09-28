@@ -10,9 +10,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushButton_come, &QPushButton::clicked, this, &MainWindow::pushButton_come_clicked);
     connect(ui->pushButton_go, &QPushButton::clicked, this, &MainWindow::pushButton_go_clicked);
 
-    ui->label_timeDay->setText("");
-    ui->label_timeWeek->setText("");
-    ui->label_timeSeason->setText("");
+    ui->label_timeDay->clear();
+    ui->label_timeWeek->clear();
+    ui->label_timeSeason->clear();
 
     initDateTimeLabel();
 
@@ -68,14 +68,10 @@ void MainWindow::setPushButtonEmployeeColor(Employee *employee)
                 if(employee->employeeIsCheckedIn())
                 {
                     button->setStyleSheet(BUTTON_COLOR_RED);
-                    ui->pushButton_come->setEnabled(false);
-                    ui->pushButton_go->setEnabled(true);
                     return;
                 }else
                 {
                     button->setStyleSheet(BUTTON_COLOR_GREEN);
-                    ui->pushButton_come->setEnabled(true);
-                    ui->pushButton_go->setEnabled(false);
                     return;
                 }
             }
@@ -93,6 +89,8 @@ void MainWindow::pushButton_come_clicked()
 
     currentEmployee->addCheckInTime(QTime::currentTime());
     setPushButtonEmployeeColor(currentEmployee);
+
+    unloadEmployee();
 }
 
 void MainWindow::pushButton_go_clicked()
@@ -105,6 +103,8 @@ void MainWindow::pushButton_go_clicked()
 
     currentEmployee->addCheckOutTime(QTime::currentTime());
     setPushButtonEmployeeColor(currentEmployee);
+
+    unloadEmployee();
 }
 
 // toDo hier weiter machen und die infos in die gui laden
@@ -134,10 +134,7 @@ void MainWindow::loadEmployee(Employee *employee)
 
     loadTableView(employee);
 
-    // toDo TabelleLaden
     // toDo Überlegen was in das output window angezeigt werden soll + hier noch die woche und saison zeit laden
-    // toDo outlog out von einen user machen?
-
 }
 
 void MainWindow::loadTableView(Employee *employee)
@@ -185,8 +182,22 @@ void MainWindow::loadTableView(Employee *employee)
 
     ui->tableView_timeStamps->setModel(model);
     ui->tableView_timeStamps->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->tableView_timeStamps->setEditTriggers(QAbstractItemView::NoEditTriggers); // toDo
+    ui->tableView_timeStamps->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tableView_timeStamps->show();
+}
+
+void MainWindow::unloadEmployee()
+{
+    ui->pushButton_come->setEnabled(false);
+    ui->pushButton_go->setEnabled(false);
+
+    ui->label_timeDay->clear();
+    ui->label_timeWeek->clear();
+    ui->label_timeSeason->clear();
+
+    ui->tableView_timeStamps->setModel(nullptr);
+
+    currentEmployee = nullptr;
 }
 
 void MainWindow::updateDateTime()

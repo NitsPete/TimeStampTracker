@@ -36,8 +36,11 @@ private:
     void initDateTimeLabel();
     void initEmployeeList();
     void setPushButtonEmployeeColor(Employee *employee);
+
     void loadEmployee(Employee *employee);
     void loadTableView(Employee *employee);
+
+    void unloadEmployee();
 
 private slots:
     void pushButton_come_clicked();
