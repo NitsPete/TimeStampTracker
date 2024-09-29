@@ -316,7 +316,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Hier steht ein platzhalter Text.&lt;/p&gt;&lt;p&gt;In diesem Bereich werden nützliche Informationen ausgegeben wie z.B.:&lt;/p&gt;&lt;p&gt;Summe der gearbeiteten Tage in der Woche/Saison&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:72pt;&quot;&gt;Output informations&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
       </item>

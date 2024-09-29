@@ -10,6 +10,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushButton_come, &QPushButton::clicked, this, &MainWindow::pushButton_come_clicked);
     connect(ui->pushButton_go, &QPushButton::clicked, this, &MainWindow::pushButton_go_clicked);
 
+    initOutputLabel();
+
     ui->label_timeDay->clear();
     ui->label_timeWeek->clear();
     ui->label_timeSeason->clear();
@@ -24,11 +26,22 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::initOutputLabel()
+{
+    QFont fontOutput = ui->label_output->font();
+    fontOutput.setPointSize(32);
+    ui->label_output->setFont(fontOutput);
+    ui->label_output->clear();
+
+    timer_flashOutputLabel = new QTimer(this);
+    connect(timer_flashOutputLabel, &QTimer::timeout, this, &MainWindow::updateOutputLabelFlash);
+}
+
 void MainWindow::initDateTimeLabel()
 {
     timer_updateDateTime = new QTimer(this);
     connect(timer_updateDateTime, &QTimer::timeout, this, &MainWindow::updateDateTime);
-    timer_updateDateTime->start(1000); // 1 second
+    timer_updateDateTime->start(1000); // ms
 }
 
 void MainWindow::initEmployeeList()
@@ -90,6 +103,8 @@ void MainWindow::pushButton_come_clicked()
     currentEmployee->addCheckInTime(QTime::currentTime());
     setPushButtonEmployeeColor(currentEmployee);
 
+    ui->label_output->setText(currentEmployee->getName() + " hat Eingestempelt!");
+    timer_flashOutputLabel->start(FLASH_INTERVALL); // ms
     unloadEmployee();
 }
 
@@ -104,10 +119,11 @@ void MainWindow::pushButton_go_clicked()
     currentEmployee->addCheckOutTime(QTime::currentTime());
     setPushButtonEmployeeColor(currentEmployee);
 
+    ui->label_output->setText(currentEmployee->getName() + " hat Ausgestempelt!");
+    timer_flashOutputLabel->start(FLASH_INTERVALL); // ms
     unloadEmployee();
 }
 
-// toDo hier weiter machen und die infos in die gui laden
 void MainWindow::loadEmployee(Employee *employee)
 {
     if(employee == nullptr)
@@ -115,6 +131,8 @@ void MainWindow::loadEmployee(Employee *employee)
         qDebug() << "loadEmployee: nullptr exception!";
         return;
     }
+
+    ui->label_output->clear();
 
     currentEmployee = employee;
 
@@ -133,8 +151,6 @@ void MainWindow::loadEmployee(Employee *employee)
     ui->label_timeSeason->setText(employee->getTotalTimeSeason());
 
     loadTableView(employee);
-
-    // toDo Überlegen was in das output window angezeigt werden soll + hier noch die woche und saison zeit laden
 }
 
 void MainWindow::loadTableView(Employee *employee)
@@ -178,7 +194,6 @@ void MainWindow::loadTableView(Employee *employee)
     }
 
     //toDo der scrollbar verschwindet manchmal
-    //toDo die tabelle muss bei jeden neuen Zeiteintrag geupdatet werden (schauen wie am besten (signal in der employye classe bei add time?
 
     ui->tableView_timeStamps->setModel(model);
     ui->tableView_timeStamps->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -200,6 +215,38 @@ void MainWindow::unloadEmployee()
     currentEmployee = nullptr;
 }
 
+void MainWindow::stopTimer_flashOutputLabel()
+{
+    timer_flashOutputLabel->stop();
+    currentFlashCounter = 0;
+    ui->label_output->clear();
+}
+
+void MainWindow::updateOutputLabelFlash()
+{
+    if(currentFlashCounter >= MAX_FLASH_TIMES)
+    {
+        stopTimer_flashOutputLabel();
+        return;
+    }else{
+        ++currentFlashCounter;
+    }
+
+    static bool flash = false;
+    flash = !flash;
+
+    QPalette palette = ui->label_output->palette();
+
+
+    QColor color;
+
+    flash ? color = Qt::darkGray : color = Qt::black;
+
+    palette.setColor(QPalette::WindowText, color);
+
+    ui->label_output->setPalette(palette);
+}
+
 void MainWindow::updateDateTime()
 {
     ui->label_time->setText(QTime::currentTime().toString("HH:mm:ss"));
@@ -208,6 +255,8 @@ void MainWindow::updateDateTime()
 
 void MainWindow::pushButton_employee_clicked(const QString &buttonText)
 {
+    stopTimer_flashOutputLabel();
+
     unsigned int uniqueId = buttonText.split(":").first().toUInt();
 
     Employee *clickedEmployee = nullptr;
