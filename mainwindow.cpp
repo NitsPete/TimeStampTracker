@@ -3,7 +3,6 @@
 
 // toDo List:
 // Remove weekTime from software
-// Try to make mouse bigger
 // Make dayTime lable text yellow if waldi hasn't add check in time
 // Min. 50 employee buttons should be displayed on the left side. Maybe make a scrollbar
 // Logout employee if there a 10 seconds no mouse input (Just remove displayed informations)
