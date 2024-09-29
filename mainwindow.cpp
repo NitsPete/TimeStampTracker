@@ -1,6 +1,16 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+// toDo List:
+// Remove weekTime from software
+// Try to make mouse bigger
+// Make dayTime lable text yellow if waldi hasn't add check in time
+// Min. 50 employee buttons should be displayed on the left side. Maybe make a scrollbar
+// Logout employee if there a 10 seconds no mouse input (Just remove displayed informations)
+// Time should saved with seconds in excel (also consider seconds in calculations)
+// Scroll bar disapeard if there are to much check in/out times added to model
+// Make excel interface
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -25,11 +35,9 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-// toDo add implementation (don_t change base class because text font can_t differ from button to button)
+
 void MainWindow::updateTextSize()
 {
-    qDebug() << this->size();
-
     setTextSize(ui->pushButton_come, 4);
     setTextSize(ui->pushButton_go, 4);
 
@@ -218,8 +226,6 @@ void MainWindow::loadTableView(Employee *employee)
             }
         }
     }
-
-    //toDo der scrollbar verschwindet manchmal
 
     ui->tableView_timeStamps->setModel(model);
     ui->tableView_timeStamps->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
