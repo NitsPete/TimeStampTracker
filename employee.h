@@ -7,7 +7,7 @@
 class Employee
 {
 public:
-    Employee(unsigned int uniqueId, bool allowed2CheckIn, QString name, QString totalTimeToday, QString totalTimeWeek, QString totalTimeSeason);
+    Employee(unsigned int uniqueId, bool allowed2CheckIn, QString name, QString totalTimeToday, QString totalTimeSeason);
 
     void addCheckInTime(QTime checkInTime);
     void addCheckOutTime(QTime addCheckOutTime);
@@ -19,7 +19,6 @@ public:
     QString getName();
     QString getButtonText(); // <uniqueId>: <name>
     QString getTotalTimeToday();
-    QString getTotalTimeWeek();
     QString getTotalTimeSeason();
     QStringList getList_checkInToday();
     QStringList getList_checkOutToday();
@@ -33,7 +32,6 @@ private:
     bool bossSetsMorningTime; // If chef have already set morning time for none allowed2CheckIn workers, for allowed2CheckIn this value must always be false
     QString name; // <second name> <first name>
     QString totalTimeToday;
-    QString totalTimeWeek;
     QString totalTimeSeason;
     QStringList list_checkInToday; // Morning time set by boss is always the first value of the list
     QStringList list_checkOutToday;

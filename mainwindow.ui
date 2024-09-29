@@ -321,7 +321,7 @@
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_workTime" stretch="6,2,8,3,8,4,8">
+       <layout class="QHBoxLayout" name="horizontalLayout_workTime" stretch="6,2,8,4,8">
         <item>
          <widget class="QLabel" name="label_sum">
           <property name="text">
@@ -340,20 +340,6 @@
          <widget class="QLabel" name="label_timeDay">
           <property name="text">
            <string>8,12 h </string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_week">
-          <property name="text">
-           <string>Woche = </string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_timeWeek">
-          <property name="text">
-           <string>40,34 h</string>
           </property>
          </widget>
         </item>

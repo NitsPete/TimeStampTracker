@@ -1,12 +1,11 @@
 #include "employee.h"
 
-Employee::Employee(unsigned int uniqueId, bool allowed2CheckIn, QString name, QString totalTimeToday, QString totalTimeWeek, QString totalTimeSeason)
+Employee::Employee(unsigned int uniqueId, bool allowed2CheckIn, QString name, QString totalTimeToday, QString totalTimeSeason)
 {
     this->uniqueId = uniqueId;
     this->allowed2CheckIn = allowed2CheckIn;
     this->name = name;
     this->totalTimeToday = totalTimeToday;
-    this->totalTimeWeek = totalTimeWeek;
     this->totalTimeSeason = totalTimeSeason;
 
     this->bossSetsMorningTime = false;
@@ -93,11 +92,6 @@ QString Employee::getButtonText()
 QString Employee::getTotalTimeToday()
 {
     return this->totalTimeToday;
-}
-
-QString Employee::getTotalTimeWeek()
-{
-    return this->totalTimeWeek;
 }
 
 QString Employee::getTotalTimeSeason()

@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Remove weekTime from software
 // Make dayTime lable text yellow if waldi hasn't add check in time
 // Update font size from time tabel
 // Min. 50 employee buttons should be displayed on the left side. Maybe make a scrollbar
@@ -23,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent)
     initOutputLabel();
 
     ui->label_timeDay->clear();
-    ui->label_timeWeek->clear();
     ui->label_timeSeason->clear();
 
     initDateTimeLabel();
@@ -47,8 +45,6 @@ void MainWindow::updateTextSize()
     setTextSize(ui->label_sum, 1);
     setTextSize(ui->label_day, 1);
     setTextSize(ui->label_timeDay, 1);
-    setTextSize(ui->label_week, 1);
-    setTextSize(ui->label_timeWeek, 1);
     setTextSize(ui->label_season, 1);
     setTextSize(ui->label_timeSeason, 1);
 
@@ -181,7 +177,6 @@ void MainWindow::loadEmployee(Employee *employee)
     }
 
     ui->label_timeDay->setText(employee->getTotalTimeToday());
-    ui->label_timeWeek->setText(employee->getTotalTimeWeek());
     ui->label_timeSeason->setText(employee->getTotalTimeSeason());
 
     loadTableView(employee);
@@ -239,7 +234,6 @@ void MainWindow::unloadEmployee()
     ui->pushButton_go->setEnabled(false);
 
     ui->label_timeDay->clear();
-    ui->label_timeWeek->clear();
     ui->label_timeSeason->clear();
 
     ui->tableView_timeStamps->setModel(nullptr);
