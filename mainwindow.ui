@@ -360,7 +360,7 @@
         <item>
          <widget class="QLabel" name="label_season">
           <property name="text">
-           <string>Saision =</string>
+           <string>Saison =</string>
           </property>
          </widget>
         </item>

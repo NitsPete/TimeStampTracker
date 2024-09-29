@@ -4,6 +4,7 @@
 // toDo List:
 // Remove weekTime from software
 // Make dayTime lable text yellow if waldi hasn't add check in time
+// Update font size from time tabel
 // Min. 50 employee buttons should be displayed on the left side. Maybe make a scrollbar
 // Logout employee if there a 10 seconds no mouse input (Just remove displayed informations)
 // Time should saved with seconds in excel (also consider seconds in calculations)
