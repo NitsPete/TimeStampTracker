@@ -25,12 +25,38 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+// toDo add implementation (don_t change base class because text font can_t differ from button to button)
+void MainWindow::updateTextSize()
+{
+    qDebug() << this->size();
+
+    setTextSize(ui->pushButton_come, 4);
+    setTextSize(ui->pushButton_go, 4);
+
+    setTextSize(ui->label_time, 4);
+    setTextSize(ui->label_date, 4);
+
+    setTextSize(ui->label_sum, 1);
+    setTextSize(ui->label_day, 1);
+    setTextSize(ui->label_timeDay, 1);
+    setTextSize(ui->label_week, 1);
+    setTextSize(ui->label_timeWeek, 1);
+    setTextSize(ui->label_season, 1);
+    setTextSize(ui->label_timeSeason, 1);
+
+    setTextSize(ui->label_output, 4);
+}
+
+void MainWindow::setTextSize(QWidget *widget, unsigned int scaleFactor)
+{
+    QFont font;
+    font = widget->font();
+    font.setPointSize(std::min(widget->width(), widget->height()) / scaleFactor);
+    widget->setFont(font);
+}
 
 void MainWindow::initOutputLabel()
 {
-    QFont fontOutput = ui->label_output->font();
-    fontOutput.setPointSize(32);
-    ui->label_output->setFont(fontOutput);
     ui->label_output->clear();
 
     timer_flashOutputLabel = new QTimer(this);
