@@ -2,7 +2,7 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Make dayTime lable text yellow if waldi hasn't add check in time
+// Bug with Person D (Number=5) & Number=7. If press come the table isn't updatet (Because first time is misisng)
 // Update font size from time tabel
 // Min. 50 employee buttons should be displayed on the left side. Maybe make a scrollbar
 // Logout employee if there a 10 seconds no mouse input (Just remove displayed informations)
@@ -177,6 +177,7 @@ void MainWindow::loadEmployee(Employee *employee)
     }
 
     ui->label_timeDay->setText(employee->getTotalTimeToday());
+    ui->label_timeDay->setStyleSheet("");
     ui->label_timeSeason->setText(employee->getTotalTimeSeason());
 
     loadTableView(employee);
@@ -213,6 +214,19 @@ void MainWindow::loadTableView(Employee *employee)
         model->setData(model->index(1, i), employee->getList_checkOutToday().at(i));
     }
 
+    // If boss didn't add check in time, mark this time and day time yellow
+    // But there always must be the item(0, 0)
+    if(!model->item(0, 0))
+    {
+        model->setItem(0, 0, new QStandardItem(""));
+    }
+    QStandardItem *firstItem = model->item(0, 0);
+    if(!employee->getAllowed2CheckIn() && !employee->getBossSetsMorningTime() && firstItem)
+    {
+        firstItem->setBackground(QBrush(Qt::yellow));
+        ui->label_timeDay->setStyleSheet("QLabel { background-color: yellow; }");
+    }
+
     for (int row = 0; row < model->rowCount(); ++row) {
         for (int column = 0; column < model->columnCount(); ++column) {
             QStandardItem *item = model->item(row, column);
@@ -234,6 +248,7 @@ void MainWindow::unloadEmployee()
     ui->pushButton_go->setEnabled(false);
 
     ui->label_timeDay->clear();
+    ui->label_timeDay->setStyleSheet("");
     ui->label_timeSeason->clear();
 
     ui->tableView_timeStamps->setModel(nullptr);
