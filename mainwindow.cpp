@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Bug with Person D (Number=5) & Number=7. If press come the table isn't updatet (Because first time is misisng)
 // Update font size from time tabel
 // Min. 50 employee buttons should be displayed on the left side. Maybe make a scrollbar
 // Logout employee if there a 10 seconds no mouse input (Just remove displayed informations)
@@ -185,7 +184,9 @@ void MainWindow::loadEmployee(Employee *employee)
 
 void MainWindow::loadTableView(Employee *employee)
 {
-    unsigned int columns = qMax(employee->getList_checkInToday().length(), employee->getList_checkOutToday().length());
+    unsigned int extraSpace;
+    (!employee->getAllowed2CheckIn() && !employee->getBossSetsMorningTime()) ? extraSpace = 1 : extraSpace = 0;
+    unsigned int columns = qMax(employee->getList_checkInToday().length()+extraSpace, employee->getList_checkOutToday().length());
     QStandardItemModel *model = new QStandardItemModel(2, columns, ui->tableView_timeStamps);
 
     model->setHeaderData(0, Qt::Vertical, QObject::tr("Anfang"));
