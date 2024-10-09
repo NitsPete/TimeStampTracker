@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Update font size from time tabel
 // Min. 50 employee buttons should be displayed on the left side. Maybe make a scrollbar
 // Logout employee if there a 10 seconds no mouse input (Just remove displayed informations)
 // Time should saved with seconds in excel (also consider seconds in calculations)
@@ -189,8 +188,8 @@ void MainWindow::loadTableView(Employee *employee)
     unsigned int columns = qMax(employee->getList_checkInToday().length()+extraSpace, employee->getList_checkOutToday().length());
     QStandardItemModel *model = new QStandardItemModel(2, columns, ui->tableView_timeStamps);
 
-    model->setHeaderData(0, Qt::Vertical, QObject::tr("Anfang"));
-    model->setHeaderData(1, Qt::Vertical, QObject::tr("Ende"));
+    model->setHeaderData(0, Qt::Vertical, QObject::tr("Anfang: "));
+    model->setHeaderData(1, Qt::Vertical, QObject::tr("Ende: "));
 
     for(unsigned int i = 0; i < columns; ++i)
     {
@@ -232,13 +231,22 @@ void MainWindow::loadTableView(Employee *employee)
         for (int column = 0; column < model->columnCount(); ++column) {
             QStandardItem *item = model->item(row, column);
             if (item) {
+                QFont font = item->font();
+                font.setPointSize(std::min(this->width(), this->height()) / 50);
+                font.setBold(false);
+                item->setFont(font);
                 item->setTextAlignment(Qt::AlignCenter);
             }
         }
     }
 
+    QFont headerFont = ui->tableView_timeStamps->horizontalHeader()->font();
+    headerFont.setPointSize(std::min(this->width(), this->height()) / 40);
+    headerFont.setBold(true);
+    ui->tableView_timeStamps->setFont(headerFont);
     ui->tableView_timeStamps->setModel(model);
     ui->tableView_timeStamps->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableView_timeStamps->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
     ui->tableView_timeStamps->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tableView_timeStamps->show();
 }
