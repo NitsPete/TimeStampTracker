@@ -7,6 +7,7 @@
 #include <QList>
 #include <QStandardItemModel>
 #include <QScrollBar>
+#include <QMouseEvent>
 
 #include <QDebug>
 
@@ -25,7 +26,8 @@ public:
     ~MainWindow();
 
 protected:
-    void resizeEvent(QResizeEvent *event) override {
+    void resizeEvent(QResizeEvent *event) override
+    {
         QMainWindow::resizeEvent(event);
         updateTextSize();
     }
@@ -43,6 +45,7 @@ private:
     const unsigned int FLASH_INTERVALL = 750; // ms
     const unsigned int MAX_FLASH_TIMES = 13; // How long should output text be visible = MAX_FLASH_TIMES * FLASH_INTERVALL
     unsigned int currentFlashCounter = 0;
+    bool flashOutputLabel = false;
 
     void updateTextSize();
     void setTextSize(QWidget *widget, unsigned int scaleFactor);
@@ -54,7 +57,6 @@ private:
 
     void loadEmployee(Employee *employee);
     void loadTableView(Employee *employee);
-
     void unloadEmployee();
 
     void stopTimer_flashOutputLabel();

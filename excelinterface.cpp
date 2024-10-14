@@ -41,7 +41,57 @@ Employee ExcelInterface::getEmployee(unsigned int number)
     list_employee.append(Employee(6, false, "EMustermann Max", "53,5 h", "5543,4 h"));
     list_employee.append(Employee(7, false, "FMustermann Max", "63,5 h", "6543,4 h"));
     list_employee.append(Employee(8, false, "GMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(8, true, "", "63,5 h", "6543,4 h")); // Zeigt Ende an weil der name leer ist ->  bedeutet dass die excel zelle leer ist
+    list_employee.append(Employee(9, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+
+    //*
+
+    list_employee.append(Employee(10, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(11, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(12, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(13, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(14, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(15, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(16, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(17, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(18, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(19, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(20, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+
+    list_employee.append(Employee(21, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(22, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(23, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(24, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(25, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(26, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(27, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(28, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(29, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+/*
+    list_employee.append(Employee(30, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(31, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(32, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(33, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(34, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(35, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(36, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(37, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(38, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(39, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+
+    list_employee.append(Employee(41, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(42, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(43, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(44, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(45, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+
+    list_employee.append(Employee(46, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(47, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(48, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    list_employee.append(Employee(49, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    */
+    //*/
+
+    list_employee.append(Employee(99, true, "", "63,5 h", "6543,4 h")); // Zeigt Ende an weil der name leer ist ->  bedeutet dass die excel zelle leer ist
 
     // Ist nicht eingecheckt -> checked out
     list_employee[0].addCheckInTime(QTime(0, 30));

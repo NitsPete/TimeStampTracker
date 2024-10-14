@@ -2,9 +2,10 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Min. 50 employee buttons should be displayed on the left side. Maybe make a scrollbar
-// Logout employee if there a 10 seconds no mouse input (Just remove displayed informations)
+// Logout employee if there a 10 seconds no mouse input (Just remove displayed informations) -> Failed to catch mouse events on mac!
+// Look at later:
 // Time should saved with seconds in excel (also consider seconds in calculations)
+// Min. 50 employee buttons should be displayed on the left side. Maybe make a scrollbar
 // Scroll bar disapeard if there are to much check in/out times added to model
 // Make excel interface
 
@@ -131,6 +132,10 @@ void MainWindow::pushButton_come_clicked()
     currentEmployee->addCheckInTime(QTime::currentTime());
     setPushButtonEmployeeColor(currentEmployee);
 
+    flashOutputLabel = false;
+    QPalette palette = ui->label_output->palette();
+    palette.setColor(QPalette::WindowText, Qt::black);
+    ui->label_output->setPalette(palette);
     ui->label_output->setText(currentEmployee->getName() + " hat Eingestempelt!");
     timer_flashOutputLabel->start(FLASH_INTERVALL); // ms
     unloadEmployee();
@@ -147,6 +152,10 @@ void MainWindow::pushButton_go_clicked()
     currentEmployee->addCheckOutTime(QTime::currentTime());
     setPushButtonEmployeeColor(currentEmployee);
 
+    flashOutputLabel = false;
+    QPalette palette = ui->label_output->palette();
+    palette.setColor(QPalette::WindowText, Qt::black);
+    ui->label_output->setPalette(palette);
     ui->label_output->setText(currentEmployee->getName() + " hat Ausgestempelt!");
     timer_flashOutputLabel->start(FLASH_INTERVALL); // ms
     unloadEmployee();
@@ -161,6 +170,10 @@ void MainWindow::loadEmployee(Employee *employee)
     }
 
     ui->label_output->clear();
+    QPalette palette = ui->label_output->palette();
+    palette.setColor(QPalette::WindowText, Qt::red);
+    ui->label_output->setPalette(palette);
+    ui->label_output->setText("Angemeldet: " + employee->getName());
 
     currentEmployee = employee;
 
@@ -282,15 +295,14 @@ void MainWindow::updateOutputLabelFlash()
         ++currentFlashCounter;
     }
 
-    static bool flash = false;
-    flash = !flash;
+    flashOutputLabel = !flashOutputLabel;
 
     QPalette palette = ui->label_output->palette();
 
 
     QColor color;
 
-    flash ? color = Qt::darkGray : color = Qt::black;
+    flashOutputLabel ? color = Qt::darkGray : color = Qt::black;
 
     palette.setColor(QPalette::WindowText, color);
 
