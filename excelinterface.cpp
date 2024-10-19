@@ -33,13 +33,13 @@ Employee ExcelInterface::getEmployee(unsigned int number)
     // ToDo: Only contains test code at the moment
     QList<Employee> list_employee;
 
-    list_employee.append(Employee(1, true, "Mustermann Max", "3,5 h", "543,4 h"));
-    list_employee.append(Employee(2, true, "AMustermann Max", "13,5 h", "1543,4 h"));
-    list_employee.append(Employee(3, true, "BMustermann Max", "23,5 h", "2543,4 h"));
-    list_employee.append(Employee(4, false, "CMustermann Max", "33,5 h", "3543,4 h"));
-    list_employee.append(Employee(5, false, "DMustermann Max", "43,5 h", "4543,4 h"));
-    list_employee.append(Employee(6, false, "EMustermann Max", "53,5 h", "5543,4 h"));
-    list_employee.append(Employee(7, false, "FMustermann Max", "63,5 h", "6543,4 h"));
+    list_employee.append(Employee(1, true, "Alin Tega", "3,5 h", "543,4 h"));
+    list_employee.append(Employee(2, true, "Adrian Tega", "13,5 h", "1543,4 h"));
+    list_employee.append(Employee(3, false, "Liviu Tega", "23,5 h", "2543,4 h"));
+    list_employee.append(Employee(4, false, "Nicolai Tega", "33,5 h", "3543,4 h"));
+    list_employee.append(Employee(5, true, "Piotr Kutcinski", "43,5 h", "4543,4 h"));
+    list_employee.append(Employee(6, true, "Piotr Gryglac", "53,5 h", "5543,4 h"));
+    list_employee.append(Employee(7, true, "Waldemar Ciolek", "63,5 h", "6543,4 h"));
     list_employee.append(Employee(8, false, "GMustermann Max", "73,5 h", "7543,4 h"));
     list_employee.append(Employee(9, true, "XMustermann Max", "73,5 h", "7543,4 h"));
 
@@ -56,7 +56,7 @@ Employee ExcelInterface::getEmployee(unsigned int number)
     list_employee.append(Employee(18, true, "XMustermann Max", "73,5 h", "7543,4 h"));
     list_employee.append(Employee(19, true, "XMustermann Max", "73,5 h", "7543,4 h"));
     list_employee.append(Employee(20, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-
+/*
     list_employee.append(Employee(21, true, "XMustermann Max", "73,5 h", "7543,4 h"));
     list_employee.append(Employee(22, true, "XMustermann Max", "73,5 h", "7543,4 h"));
     list_employee.append(Employee(23, true, "XMustermann Max", "73,5 h", "7543,4 h"));
@@ -66,7 +66,7 @@ Employee ExcelInterface::getEmployee(unsigned int number)
     list_employee.append(Employee(27, true, "XMustermann Max", "73,5 h", "7543,4 h"));
     list_employee.append(Employee(28, true, "XMustermann Max", "73,5 h", "7543,4 h"));
     list_employee.append(Employee(29, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-/*
+
     list_employee.append(Employee(30, true, "XMustermann Max", "73,5 h", "7543,4 h"));
     list_employee.append(Employee(31, true, "XMustermann Max", "73,5 h", "7543,4 h"));
     list_employee.append(Employee(32, true, "XMustermann Max", "73,5 h", "7543,4 h"));
@@ -92,7 +92,7 @@ Employee ExcelInterface::getEmployee(unsigned int number)
     //*/
 
     list_employee.append(Employee(99, true, "", "63,5 h", "6543,4 h")); // Zeigt Ende an weil der name leer ist ->  bedeutet dass die excel zelle leer ist
-
+/*
     // Ist nicht eingecheckt -> checked out
     list_employee[0].addCheckInTime(QTime(0, 30));
     list_employee[0].addCheckInTime(QTime(2, 30));
@@ -132,7 +132,7 @@ Employee ExcelInterface::getEmployee(unsigned int number)
 
     // Er hat schon ausgecheckt aber waldi noch nicht rein -> checked out allowed to check in
     list_employee[6].addCheckOutTime(QTime(20, 30));
-
+*/
     // User checked out bevor waldis check in zeit -> keine zeit rechnung, user ist check in -> allowed to check out -> alle zeiten vor dem ersten check in sollten verworfen werden
     list_employee[7].setBossSetsMorningTime(true);
     list_employee[7].addCheckInTime(QTime(3, 50));

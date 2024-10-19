@@ -231,7 +231,8 @@
            </font>
           </property>
           <property name="text">
-           <string>Kommen</string>
+           <string>START
+LUCRU</string>
           </property>
          </widget>
         </item>
@@ -253,7 +254,8 @@
            </font>
           </property>
           <property name="text">
-           <string>Gehen</string>
+           <string>GATA
+LUCRU</string>
           </property>
          </widget>
         </item>
@@ -321,18 +323,24 @@
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_workTime" stretch="6,2,8,4,8">
+       <layout class="QHBoxLayout" name="horizontalLayout_workTime" stretch="0,1,8,0,2,8">
         <item>
-         <widget class="QLabel" name="label_sum">
-          <property name="text">
-           <string>Summe: </string>
+         <spacer name="horizontalSpacer_1_workTime">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
-         </widget>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
         <item>
          <widget class="QLabel" name="label_day">
           <property name="text">
-           <string>Tag =</string>
+           <string>TOTAL PE AZI =</string>
           </property>
          </widget>
         </item>
@@ -344,9 +352,22 @@
          </widget>
         </item>
         <item>
+         <spacer name="horizontalSpacer_2_workTime">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
          <widget class="QLabel" name="label_season">
           <property name="text">
-           <string>Saison =</string>
+           <string>TOTAL SEZON =</string>
           </property>
          </widget>
         </item>

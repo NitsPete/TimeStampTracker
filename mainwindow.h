@@ -39,8 +39,8 @@ private:
     Employee *currentEmployee = nullptr;
     QList<Employee> list_employee;
 
-    const QString BUTTON_COLOR_RED = "QPushButton { background-color: red;}";
-    const QString BUTTON_COLOR_GREEN = "QPushButton { background-color: green;}";
+    const QString BUTTON_COLOR_RED = "QPushButton { color: white; background-color: red;}";
+    const QString BUTTON_COLOR_GREEN = "QPushButton { color: white; background-color: green;}";
 
     const unsigned int FLASH_INTERVALL = 750; // ms
     const unsigned int MAX_FLASH_TIMES = 13; // How long should output text be visible = MAX_FLASH_TIMES * FLASH_INTERVALL

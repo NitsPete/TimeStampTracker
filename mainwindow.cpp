@@ -2,6 +2,9 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
+// Remove Summe label
+// Add Icons to Time and Date
+// Add Language to Rumänisch
 // Logout employee if there a 10 seconds no mouse input (Just remove displayed informations) -> Failed to catch mouse events on mac!
 // Look at later:
 // Time should saved with seconds in excel (also consider seconds in calculations)
@@ -41,7 +44,6 @@ void MainWindow::updateTextSize()
     setTextSize(ui->label_time, 4);
     setTextSize(ui->label_date, 4);
 
-    setTextSize(ui->label_sum, 1);
     setTextSize(ui->label_day, 1);
     setTextSize(ui->label_timeDay, 1);
     setTextSize(ui->label_season, 1);
@@ -136,7 +138,7 @@ void MainWindow::pushButton_come_clicked()
     QPalette palette = ui->label_output->palette();
     palette.setColor(QPalette::WindowText, Qt::black);
     ui->label_output->setPalette(palette);
-    ui->label_output->setText(currentEmployee->getName() + " hat Eingestempelt!");
+    ui->label_output->setText(currentEmployee->getName() + " START LUCRU!");
     timer_flashOutputLabel->start(FLASH_INTERVALL); // ms
     unloadEmployee();
 }
@@ -156,7 +158,7 @@ void MainWindow::pushButton_go_clicked()
     QPalette palette = ui->label_output->palette();
     palette.setColor(QPalette::WindowText, Qt::black);
     ui->label_output->setPalette(palette);
-    ui->label_output->setText(currentEmployee->getName() + " hat Ausgestempelt!");
+    ui->label_output->setText(currentEmployee->getName() + " GATA LUCRU!");
     timer_flashOutputLabel->start(FLASH_INTERVALL); // ms
     unloadEmployee();
 }
@@ -173,7 +175,7 @@ void MainWindow::loadEmployee(Employee *employee)
     QPalette palette = ui->label_output->palette();
     palette.setColor(QPalette::WindowText, Qt::red);
     ui->label_output->setPalette(palette);
-    ui->label_output->setText("Angemeldet: " + employee->getName());
+    ui->label_output->setText("CORESPUNDE: " + employee->getName());
 
     currentEmployee = employee;
 
@@ -201,8 +203,8 @@ void MainWindow::loadTableView(Employee *employee)
     unsigned int columns = qMax(employee->getList_checkInToday().length()+extraSpace, employee->getList_checkOutToday().length());
     QStandardItemModel *model = new QStandardItemModel(2, columns, ui->tableView_timeStamps);
 
-    model->setHeaderData(0, Qt::Vertical, QObject::tr("Anfang: "));
-    model->setHeaderData(1, Qt::Vertical, QObject::tr("Ende: "));
+    model->setHeaderData(0, Qt::Vertical, QObject::tr("START: "));
+    model->setHeaderData(1, Qt::Vertical, QObject::tr("STOP: "));
 
     for(unsigned int i = 0; i < columns; ++i)
     {
