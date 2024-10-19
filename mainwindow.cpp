@@ -2,9 +2,6 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Remove Summe label
-// Add Icons to Time and Date
-// Add Language to Rumänisch
 // Logout employee if there a 10 seconds no mouse input (Just remove displayed informations) -> Failed to catch mouse events on mac!
 // Look at later:
 // Time should saved with seconds in excel (also consider seconds in calculations)
@@ -50,6 +47,10 @@ void MainWindow::updateTextSize()
     setTextSize(ui->label_timeSeason, 1);
 
     setTextSize(ui->label_output, 4);
+
+    int iconSize = ui->label_time->font().pointSize();
+    ui->label_timeIcon->setFixedSize(iconSize, iconSize);
+    ui->label_dateIcon->setFixedSize(iconSize, iconSize);
 }
 
 void MainWindow::setTextSize(QWidget *widget, unsigned int scaleFactor)
