@@ -201,7 +201,7 @@ void MainWindow::loadTableView(Employee *employee)
 {
     unsigned int extraSpace;
     (!employee->getAllowed2CheckIn() && !employee->getBossSetsMorningTime()) ? extraSpace = 1 : extraSpace = 0;
-    unsigned int columns = qMax(employee->getList_checkInToday().length()+extraSpace, employee->getList_checkOutToday().length());
+    unsigned int columns = qMax((unsigned int)(employee->getList_checkInToday().length()+extraSpace), (unsigned int)employee->getList_checkOutToday().length());
     QStandardItemModel *model = new QStandardItemModel(2, columns, ui->tableView_timeStamps);
 
     model->setHeaderData(0, Qt::Vertical, QObject::tr("START: "));
