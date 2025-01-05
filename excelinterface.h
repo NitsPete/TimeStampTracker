@@ -2,8 +2,15 @@
 #define EXCELINTERFACE_H
 
 #include <QList>
+#include <QProcess>
+#include <QLocale>
+
+#include <QDebug>
 
 #include "employee.h"
+
+static const QString PATH_LIBREOFFICE_FILE = "/home/admin/SharedFolder/Arbeitszeiten.ods";
+static const QString PATH_GET_ROW = "/home/admin/Desktop/TimeStampTracker/pythonLibreOfficeAPI/readRow.py";
 
 class ExcelInterface
 {

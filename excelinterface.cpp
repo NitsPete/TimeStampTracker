@@ -9,7 +9,7 @@ QList<Employee> ExcelInterface::getList_employee()
 {
     QList<Employee> list_employee;
 
-    unsigned int number = 1;
+    unsigned int number = 0;
     bool allEmployeeFound = false;
     do{
        Employee employee = getEmployee(number);
@@ -30,113 +30,104 @@ QList<Employee> ExcelInterface::getList_employee()
 
 Employee ExcelInterface::getEmployee(unsigned int number)
 {
-    // ToDo: Only contains test code at the moment
-    QList<Employee> list_employee;
+    QProcess p;
 
-    list_employee.append(Employee(1, true, "Alin Tega", "3,5 h", "543,4 h"));
-    list_employee.append(Employee(2, true, "Adrian Tega", "13,5 h", "1543,4 h"));
-    list_employee.append(Employee(3, false, "Liviu Tega", "23,5 h", "2543,4 h"));
-    list_employee.append(Employee(4, false, "Nicolai Tega", "33,5 h", "3543,4 h"));
-    list_employee.append(Employee(5, true, "Piotr Kutcinski", "43,5 h", "4543,4 h"));
-    list_employee.append(Employee(6, true, "Piotr Gryglac", "53,5 h", "5543,4 h"));
-    list_employee.append(Employee(7, true, "Waldemar Ciolek", "63,5 h", "6543,4 h"));
-    list_employee.append(Employee(8, false, "GMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(9, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.remove("LD_LIBRARY_PATH"); // Make sure to finde lib libreglo.so
+    p.setProcessEnvironment(env);
 
-    //*
+    QStringList params;
+    params << PATH_GET_ROW;
+    params << PATH_LIBREOFFICE_FILE << QString::number(number);
+    p.start("python3", params);
+    p.waitForFinished(-1);
 
-    list_employee.append(Employee(10, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(11, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(12, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(13, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(14, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(15, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(16, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(17, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(18, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(19, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(20, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-/*
-    list_employee.append(Employee(21, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(22, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(23, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(24, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(25, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(26, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(27, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(28, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(29, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    QString output = p.readAll();
+    // allowed2CheckIn, name, time season time day, checkin1, checkout1, checkin2, checkout2, ...
+    QStringList employeeData = output.split('\n');
 
-    list_employee.append(Employee(30, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(31, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(32, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(33, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(34, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(35, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(36, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(37, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(38, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(39, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    QString errorOutput = p.readAllStandardError();
+    if(!errorOutput.isEmpty())
+    {
+        qDebug() << errorOutput;
+    }
 
-    list_employee.append(Employee(41, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(42, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(43, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(44, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(45, true, "XMustermann Max", "73,5 h", "7543,4 h"));
+    Employee *pEmployee;
+    bool bossSetsMorningTime = false;
+    bool allowed2CheckIn = false;
+    QString name = "";
+    QString timeSeason = "";
+    QString timeDay = "";
 
-    list_employee.append(Employee(46, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(47, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(48, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    list_employee.append(Employee(49, true, "XMustermann Max", "73,5 h", "7543,4 h"));
-    */
-    //*/
+    if(employeeData.length() > 0)
+    {
+        if(employeeData.at(0) != "-1")
+        {
+            allowed2CheckIn = true;
+        }
+    }
 
-    list_employee.append(Employee(99, true, "", "63,5 h", "6543,4 h")); // Zeigt Ende an weil der name leer ist ->  bedeutet dass die excel zelle leer ist
-/*
-    // Ist nicht eingecheckt -> checked out
-    list_employee[0].addCheckInTime(QTime(0, 30));
-    list_employee[0].addCheckInTime(QTime(2, 30));
-    list_employee[0].addCheckInTime(QTime(4, 30));
-    list_employee[0].addCheckInTime(QTime(6, 30));
-    list_employee[0].addCheckInTime(QTime(8, 30));
-    list_employee[0].addCheckInTime(QTime(10, 30));
-    list_employee[0].addCheckInTime(QTime(12, 30));
+    if(employeeData.length() > 1)
+    {
+        name = employeeData.at(1);
+    }
 
-    list_employee[0].addCheckOutTime(QTime(1, 30));
-    list_employee[0].addCheckOutTime(QTime(3, 17));
-    list_employee[0].addCheckOutTime(QTime(5, 23));
-    list_employee[0].addCheckOutTime(QTime(7, 30));
-    list_employee[0].addCheckOutTime(QTime(9, 17));
-    list_employee[0].addCheckOutTime(QTime(11, 23));
-    list_employee[0].addCheckOutTime(QTime(13, 30));
+    if(employeeData.length() > 2)
+    {
+        timeSeason = QLocale(QLocale::German).toString(employeeData.at(2).toDouble(), 'f', 1);
+        timeSeason += " h";
+    }
 
-    // Ist nicht eingecheckt darf aber selber einchecken -> checked out, allowed to check in
-    // empty list by employee[1]
+    if(employeeData.length() > 3)
+    {
+        int hour = 0;
+        int minute = 0;
+        int second = 0;
+        QStringList timeStamps = employeeData.at(3).split(':');
+        if(timeStamps.length() >= 3)
+        {
+            hour = timeStamps.at(0).toInt();
+            minute = timeStamps.at(1).toInt();
+            second = timeStamps.at(2).toInt();
+        }
+        double time = hour + (double)minute / 60 + (double)second / 3600;
+        timeDay = QLocale(QLocale::German).toString(time, 'f', 1);
+        timeDay += " h";
+    }
 
-    // Ist eingecheckt -> checked in
-    list_employee[2].addCheckInTime(QTime(3, 30));
+    pEmployee = new Employee(number, allowed2CheckIn, name, timeDay, timeSeason);
 
-    // Waldi hat noch keine zeit eingtragen ist somit eingecheckt in der früh -> checked in allowed to check out
-    // empty list by emplyee[3]
+    for(int i = 4; i < employeeData.length(); ++i)
+    {
+        if((i == 4) && !allowed2CheckIn && !employeeData.at(4).isEmpty())
+        {
+            bossSetsMorningTime = true;
+        }
 
-    // Er hat ausgecheckt und waldi hat noch nicht angecheckt -> checkout out until 24 Uhr allowed to check in
-    list_employee[4].addCheckInTime(QTime(13, 30));
+        if(!employeeData.at(i).isEmpty())
+        {
+            int hour = 0;
+            int minute = 0;
+            QStringList timeStamps = employeeData.at(i).split(':');
+            if(timeStamps.length() >= 2)
+            {
+                hour = timeStamps.at(0).toInt();
+                minute = timeStamps.at(1).toInt();
+            }
 
-    list_employee[4].addCheckOutTime(QTime(12, 30));
-    list_employee[4].addCheckOutTime(QTime(20, 30));
+            if(i%2 == 0)
+            {
+                pEmployee->addCheckInTime(QTime(hour, minute));
+            }else
+            {
+                pEmployee->addCheckOutTime(QTime(hour, minute));
+            }
 
-    // Waldi hat schon eingecheckt in der früh -> chechedk in allwoed to check out
-    list_employee[5].setBossSetsMorningTime(true);
-    list_employee[5].addCheckInTime(QTime(13, 30));
+        }
+    }
 
+    pEmployee->setBossSetsMorningTime(bossSetsMorningTime);
 
-    // Er hat schon ausgecheckt aber waldi noch nicht rein -> checked out allowed to check in
-    list_employee[6].addCheckOutTime(QTime(20, 30));
-*/
-    // User checked out bevor waldis check in zeit -> keine zeit rechnung, user ist check in -> allowed to check out -> alle zeiten vor dem ersten check in sollten verworfen werden
-    list_employee[7].setBossSetsMorningTime(true);
-    list_employee[7].addCheckInTime(QTime(3, 50));
-    list_employee[7].addCheckOutTime(QTime(3, 30));
+    return *pEmployee;
 
-    return list_employee[number-1];
 }

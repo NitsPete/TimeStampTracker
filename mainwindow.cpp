@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    initLibreOfficeServer();
+
     connect(ui->pushButton_come, &QPushButton::clicked, this, &MainWindow::pushButton_come_clicked);
     connect(ui->pushButton_go, &QPushButton::clicked, this, &MainWindow::pushButton_go_clicked);
 
@@ -30,8 +32,15 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    if (libreOfficeServer->state() != QProcess::NotRunning) {
+        libreOfficeServer->kill();
+        libreOfficeServer->waitForFinished();
+    }
+
     delete ui;
 }
+
+
 
 void MainWindow::updateTextSize()
 {
@@ -59,6 +68,23 @@ void MainWindow::setTextSize(QWidget *widget, unsigned int scaleFactor)
     font = widget->font();
     font.setPointSize(std::min(widget->width(), widget->height()) / scaleFactor);
     widget->setFont(font);
+}
+
+void MainWindow::initLibreOfficeServer()
+{
+    QString libreOfficePath = "libreoffice";
+    QStringList args;
+    args << "--calc" << "--accept=socket,host=localhost,port=2002;urp;" << "--nologo" << "--headless" << "--invisible";
+    libreOfficeServer = new QProcess();
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.remove("LD_LIBRARY_PATH"); // Make sure to finde lib libreglo.so
+    libreOfficeServer->setProcessEnvironment(env);
+    libreOfficeServer->start(libreOfficePath, args);
+
+    if(!libreOfficeServer->waitForStarted())
+    {
+        QMessageBox::critical(this, "Process start failed", "Unable to start LibreOffice-Server\nDatabase may not work!");
+    }
 }
 
 void MainWindow::initOutputLabel()

@@ -8,6 +8,8 @@
 #include <QStandardItemModel>
 #include <QScrollBar>
 #include <QMouseEvent>
+#include <QProcess>
+#include <QMessageBox>
 
 #include <QDebug>
 
@@ -34,6 +36,7 @@ protected:
 
 private:
     Ui::MainWindow *ui;
+    QProcess *libreOfficeServer;
     QTimer *timer_updateDateTime;
     QTimer *timer_flashOutputLabel;
     Employee *currentEmployee = nullptr;
@@ -50,6 +53,7 @@ private:
     void updateTextSize();
     void setTextSize(QWidget *widget, unsigned int scaleFactor);
 
+    void initLibreOfficeServer();
     void initOutputLabel();
     void initDateTimeLabel();
     void initEmployeeList();
