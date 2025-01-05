@@ -1,6 +1,5 @@
 import sys
 import uno
-from com.sun.star.beans import PropertyValue
 from pathlib import Path
 
 HEADER_ROWS = 1
@@ -72,7 +71,7 @@ def main():
 
     writeTime(document, row_number, time, isCheckInTime)
 
-    document.store() # If document already exist you can use store insteas of storeAsURL
+    document.store() # If document already exist you can use store() instead of storeAsURL(url, properties)
 
     document.close(True)
 
