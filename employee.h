@@ -9,8 +9,8 @@ class Employee
 public:
     Employee(unsigned int uniqueId, bool allowed2CheckIn, QString name, QString totalTimeToday, QString totalTimeSeason);
 
-    void addCheckInTime(QTime checkInTime);
-    void addCheckOutTime(QTime addCheckOutTime);
+    void addCheckInTime(QTime checkInTime); // If you want to also update the excel interface uses ExcelInterface::addCheckInTime instead
+    void addCheckOutTime(QTime addCheckOutTime); // If you want to also update the excel interface uses ExcelInterface::addCheckOutTime instead
 
     bool employeeIsCheckedIn();
 
@@ -25,6 +25,8 @@ public:
     unsigned int getUniqueId();
 
     void setBossSetsMorningTime(bool bossSetsMorningTime);
+    void setTotalTimeToday(QString totalTimeToday);
+    void setTotalTimeSeason(QString totalTimeSeason);
 
 private:
     unsigned int uniqueId;

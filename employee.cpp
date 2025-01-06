@@ -118,3 +118,13 @@ void Employee::setBossSetsMorningTime(bool bossSetsMorningTime)
 {
     this->bossSetsMorningTime = bossSetsMorningTime;
 }
+
+void Employee::setTotalTimeToday(QString totalTimeToday)
+{
+    this->totalTimeToday = totalTimeToday;
+}
+
+void Employee::setTotalTimeSeason(QString totalTimeSeason)
+{
+    this->totalTimeSeason = totalTimeSeason;
+}

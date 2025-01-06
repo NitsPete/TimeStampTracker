@@ -5,6 +5,23 @@ ExcelInterface::ExcelInterface()
 
 }
 
+QPair<QString, QString> ExcelInterface::runPythonProcess(QStringList params)
+{
+    QProcess p;
+
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.remove("LD_LIBRARY_PATH"); // Make sure to finde lib libreglo.so
+    p.setProcessEnvironment(env);
+
+    p.start("python3", params);
+    p.waitForFinished(-1);
+
+    QString output = p.readAll();
+    QString errorOutput = p.readAllStandardError();
+
+    return QPair<QString, QString>(output, errorOutput);
+}
+
 QList<Employee> ExcelInterface::getList_employee()
 {
     QList<Employee> list_employee;
@@ -28,25 +45,31 @@ QList<Employee> ExcelInterface::getList_employee()
     return list_employee;
 }
 
+void ExcelInterface::addCheckInTime(Employee *employee, QTime checkInTime)
+{
+    employee->addCheckInTime(checkInTime);
+    addTime(employee, eCheckTime::CHECKIN, checkInTime);
+}
+
+void ExcelInterface::addCheckOutTime(Employee *employee, QTime checkOutTime)
+{
+    employee->addCheckOutTime(checkOutTime);
+    addTime(employee, eCheckTime::CHECKOUT, checkOutTime);
+}
+
 Employee ExcelInterface::getEmployee(unsigned int number)
 {
-    QProcess p;
-
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    env.remove("LD_LIBRARY_PATH"); // Make sure to finde lib libreglo.so
-    p.setProcessEnvironment(env);
-
     QStringList params;
     params << PATH_GET_ROW;
     params << PATH_LIBREOFFICE_FILE << QString::number(number);
-    p.start("python3", params);
-    p.waitForFinished(-1);
 
-    QString output = p.readAll();
+    QPair<QString, QString> outputs = runPythonProcess(params);
+    QString output = outputs.first;
+    QString errorOutput = outputs.second;
+
     // allowed2CheckIn, name, time season time day, checkin1, checkout1, checkin2, checkout2, ...
     QStringList employeeData = output.split('\n');
 
-    QString errorOutput = p.readAllStandardError();
     if(!errorOutput.isEmpty())
     {
         qDebug() << errorOutput;
@@ -130,4 +153,51 @@ Employee ExcelInterface::getEmployee(unsigned int number)
 
     return *pEmployee;
 
+}
+
+void ExcelInterface::addTime(Employee *employee, eCheckTime checkTime, QTime time)
+{
+    QStringList params;
+    params << PATH_WRITE_TIME
+           << PATH_LIBREOFFICE_FILE
+           << QString::number(employee->getUniqueId())
+           << time.toString("hh:mm:ss")
+           << QString::number(static_cast<int>(checkTime));
+
+    QPair<QString, QString> outputs = runPythonProcess(params);
+    QString output = outputs.first;
+    QString errorOutput = outputs.second;
+    if(!errorOutput.isEmpty())
+    {
+        qDebug() << errorOutput;
+    }
+
+
+
+    QString timeSeason = "";
+    QString timeDay = "";
+
+    QStringList times = output.split("\n");
+    if(times.length() >= 2)
+    {
+        timeSeason = QLocale(QLocale::German).toString(times.at(0).toDouble(), 'f', 1) + " h";
+        timeDay = times.at(1);
+
+        int hour = 0;
+        int minute = 0;
+        int second = 0;
+        QStringList timeStamps = timeDay.split(':');
+        if(timeStamps.length() >= 3)
+        {
+            hour = timeStamps.at(0).toInt();
+            minute = timeStamps.at(1).toInt();
+            second = timeStamps.at(2).toInt();
+        }
+        double time = hour + (double)minute / 60 + (double)second / 3600;
+        timeDay = QLocale(QLocale::German).toString(time, 'f', 1);
+        timeDay += " h";
+    }
+
+    employee->setTotalTimeSeason(timeSeason);
+    employee->setTotalTimeToday(timeDay);
 }

@@ -10,6 +10,8 @@
 #include <QMouseEvent>
 #include <QProcess>
 #include <QMessageBox>
+#include <thread>
+#include <chrono>
 
 #include <QDebug>
 
@@ -54,6 +56,8 @@ private:
     void setTextSize(QWidget *widget, unsigned int scaleFactor);
 
     void initLibreOfficeServer();
+    bool check4LibreOfficeServer();
+    void initLibreOfficeFile();
     void initOutputLabel();
     void initDateTimeLabel();
     void initEmployeeList();

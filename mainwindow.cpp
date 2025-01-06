@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     initLibreOfficeServer();
+    initLibreOfficeFile();
 
     connect(ui->pushButton_come, &QPushButton::clicked, this, &MainWindow::pushButton_come_clicked);
     connect(ui->pushButton_go, &QPushButton::clicked, this, &MainWindow::pushButton_go_clicked);
@@ -84,6 +85,46 @@ void MainWindow::initLibreOfficeServer()
     if(!libreOfficeServer->waitForStarted())
     {
         QMessageBox::critical(this, "Process start failed", "Unable to start LibreOffice-Server\nDatabase may not work!");
+    }
+
+    // Makes sure the server is online
+    while(!check4LibreOfficeServer());
+}
+
+bool MainWindow::check4LibreOfficeServer()
+{
+    static unsigned int count = 1;
+    QProcess process;
+    process.start("bash", QStringList() << "-c" << "telnet 127.0.0.1 2002");
+    process.waitForFinished(1000); // If connect to servr this will raise: "QProcess: Destroyed while process ("bash") is still running."
+
+    QString output = process.readAllStandardOutput();
+
+    if (output.contains("Connected"))
+    {
+        qDebug() << "LibreOffice-Server is online!";
+        count = 1;
+        return true;
+    } else {
+        qDebug() << QString::number(count) << ": Wait for LibreOffice-Server!";
+        ++count;
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000)); // Wait 1 second
+    }
+    return false;
+}
+
+void MainWindow::initLibreOfficeFile()
+{
+    QStringList params;
+    params << PATH_INIT_LIBRE_OFFICE_FILE
+           << PATH_LIBREOFFICE_FILE;
+
+    QPair<QString, QString> outputs = ExcelInterface::runPythonProcess(params);
+    QString errorOutput = outputs.second;
+
+    if(!errorOutput.isEmpty())
+    {
+        qDebug() << errorOutput;
     }
 }
 
@@ -158,7 +199,7 @@ void MainWindow::pushButton_come_clicked()
         return;
     }
 
-    currentEmployee->addCheckInTime(QTime::currentTime());
+    ExcelInterface::addCheckInTime(currentEmployee, QTime::currentTime());
     setPushButtonEmployeeColor(currentEmployee);
 
     flashOutputLabel = false;
@@ -178,7 +219,7 @@ void MainWindow::pushButton_go_clicked()
         return;
     }
 
-    currentEmployee->addCheckOutTime(QTime::currentTime());
+    ExcelInterface::addCheckOutTime(currentEmployee, QTime::currentTime());
     setPushButtonEmployeeColor(currentEmployee);
 
     flashOutputLabel = false;
