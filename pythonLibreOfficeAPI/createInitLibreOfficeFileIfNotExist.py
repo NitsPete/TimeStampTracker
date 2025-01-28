@@ -6,7 +6,7 @@ from pathlib import Path
 from datetime import datetime
 
 MAX_CHECK_TIMESS = 30
-MAX_COLUMNS = 3 + MAX_CHECK_TIMESS
+MAX_COLUMNS = 3 + MAX_CHECK_TIMESS * 2
 MAX_NAME_ROWS = 100
 
 COLUMN_NAME = 0
