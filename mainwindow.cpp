@@ -2,9 +2,8 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Fix Bug with special employye! Allowed to check in yellow color is exact to opposite it supposed to be!
-// Find a way for auto update with libreOfficeInterface
 // Find a way to write Times to libreOfficeInterface faster
+// Find a way for auto update with libreOfficeInterface
 // Logout employee if there a 10 seconds no mouse input (Just remove displayed informations) -> Failed to catch mouse events on mac!
 // Look at later:
 // Time should saved with seconds in excel (also consider seconds in calculations)

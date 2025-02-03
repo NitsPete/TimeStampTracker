@@ -74,11 +74,13 @@ def copySheetData(document):
                 newSheet.Columns.getByIndex(columnNumber).OptimalWidth = True
                 continue
 
-            # Copy infos for special employee
             if columnNumber == COLUMN_NAME:
                 newCell.String = oldCell.String
+                # Copy infos for special employee
                 if oldCell.CellBackColor != -1:
                     newCell.CellBackColor = oldCell.CellBackColor
+                # Create background cell to add time in libreOffice only if name exist
+                elif newCell.String:
                     firstCheckInTimeCell = newSheet.getCellByPosition(COLUMN_FIRST_CHECK_IN, rowNumber)
                     firstCheckInTimeCell.CellBackColor = 0xFFFF00 # Yellow (RGB: 255, 255, 0)
 
@@ -104,7 +106,7 @@ def main():
     argc = len(sys.argv)
     if argc != 2:
         print("Wrong parameter count!")
-        return 
+        #return 
 
     path = Path(sys.argv[1])
 
