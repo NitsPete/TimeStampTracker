@@ -16,6 +16,7 @@ const QString PATH = "/home/admin/Desktop/TimeStampTracker/pythonLibreOfficeAPI/
 const QString PATH_GET_ROW = PATH + "readRow.py";
 const QString PATH_WRITE_TIME = PATH + "writeTime.py";
 const QString PATH_INIT_LIBRE_OFFICE_FILE = PATH + "createInitLibreOfficeFileIfNotExist.py";
+const QString PATH_INIT_LiBRE_OFFICE_SHEET = PATH + "createNewSheet.py";
 
 typedef enum eCheckTime
 {

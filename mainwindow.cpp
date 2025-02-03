@@ -2,12 +2,14 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
+// Fix Bug with special employye! Allowed to check in yellow color is exact to opposite it supposed to be!
+// Find a way for auto update with libreOfficeInterface
+// Find a way to write Times to libreOfficeInterface faster
 // Logout employee if there a 10 seconds no mouse input (Just remove displayed informations) -> Failed to catch mouse events on mac!
 // Look at later:
 // Time should saved with seconds in excel (also consider seconds in calculations)
 // Min. 50 employee buttons should be displayed on the left side. Maybe make a scrollbar
 // Scroll bar disapeard if there are to much check in/out times added to model
-// Make excel interface
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,9 +19,17 @@ MainWindow::MainWindow(QWidget *parent)
 
     initLibreOfficeServer();
     initLibreOfficeFile();
+    initLibreOfficeSheet();
+
+    lastCheckedDate = QDate::currentDate();
+    timer_check4newDay = new QTimer(this);
 
     connect(ui->pushButton_come, &QPushButton::clicked, this, &MainWindow::pushButton_come_clicked);
     connect(ui->pushButton_go, &QPushButton::clicked, this, &MainWindow::pushButton_go_clicked);
+
+    connect(timer_check4newDay, &QTimer::timeout, this, &MainWindow::check4newDay);
+
+    timer_check4newDay->start(60000); // Check every 60 seconds
 
     initOutputLabel();
 
@@ -40,8 +50,6 @@ MainWindow::~MainWindow()
 
     delete ui;
 }
-
-
 
 void MainWindow::updateTextSize()
 {
@@ -117,6 +125,21 @@ void MainWindow::initLibreOfficeFile()
 {
     QStringList params;
     params << PATH_INIT_LIBRE_OFFICE_FILE
+           << PATH_LIBREOFFICE_FILE;
+
+    QPair<QString, QString> outputs = ExcelInterface::runPythonProcess(params);
+    QString errorOutput = outputs.second;
+
+    if(!errorOutput.isEmpty())
+    {
+        qDebug() << errorOutput;
+    }
+}
+
+void MainWindow::initLibreOfficeSheet()
+{
+    QStringList params;
+    params << PATH_INIT_LiBRE_OFFICE_SHEET
            << PATH_LIBREOFFICE_FILE;
 
     QPair<QString, QString> outputs = ExcelInterface::runPythonProcess(params);
@@ -383,6 +406,16 @@ void MainWindow::updateDateTime()
 {
     ui->label_time->setText(QTime::currentTime().toString("HH:mm:ss"));
     ui->label_date->setText(QDate::currentDate().toString("dd.MM.yyyy"));
+}
+
+void MainWindow::check4newDay()
+{
+    QDate currentDate = QDate::currentDate();
+    if(lastCheckedDate != currentDate)
+    {
+        lastCheckedDate = currentDate;
+        initLibreOfficeSheet();
+    }
 }
 
 void MainWindow::pushButton_employee_clicked(const QString &buttonText)

@@ -52,12 +52,16 @@ private:
     unsigned int currentFlashCounter = 0;
     bool flashOutputLabel = false;
 
+    QTimer *timer_check4newDay;
+    QDate lastCheckedDate;
+
     void updateTextSize();
     void setTextSize(QWidget *widget, unsigned int scaleFactor);
 
     void initLibreOfficeServer();
     bool check4LibreOfficeServer();
     void initLibreOfficeFile();
+    void initLibreOfficeSheet();
     void initOutputLabel();
     void initDateTimeLabel();
     void initEmployeeList();
@@ -75,6 +79,7 @@ private slots:
 
     void updateOutputLabelFlash();
     void updateDateTime();
+    void check4newDay();
     void pushButton_employee_clicked(const QString &buttonText);
 };
 #endif // MAINWINDOW_H
