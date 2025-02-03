@@ -4,6 +4,7 @@ import os
 import shutil
 from pathlib import Path
 from datetime import datetime
+from com.sun.star.task import ErrorCodeIOException
 
 MAX_CHECK_TIMESS = 30
 MAX_COLUMNS = 3 + MAX_CHECK_TIMESS * 2
@@ -134,7 +135,12 @@ def main():
 
     initDocument(document)
     
-    document.store() # If document already exist you can use store() instead of storeAsURL(url, properties)
+    try:
+        document.store() # If document already exist you can use store() instead of storeAsURL(url, properties)
+    except ErrorCodeIOException:
+        print("Unable to save file!")
+        document.close(True)
+        return -1
 
     document.close(True)
 

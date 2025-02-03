@@ -81,5 +81,6 @@ private slots:
     void updateDateTime();
     void check4newDay();
     void pushButton_employee_clicked(const QString &buttonText);
+    void on_tmpButton_clicked(); // toDo remove
 };
 #endif // MAINWINDOW_H

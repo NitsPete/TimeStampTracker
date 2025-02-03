@@ -2,6 +2,7 @@ import sys
 import uno
 from pathlib import Path
 from datetime import datetime
+from com.sun.star.task import ErrorCodeIOException
 
 MAX_COLUMNS = 63
 MAX_ROWS = 101
@@ -53,7 +54,8 @@ def copySheetData(document):
         sheets.insertNewByName(newName, 0)
     else:
         print("Sheet already exist!")
-        return
+        document.close(True)
+        sys.exit(0)
 
     newSheet = sheets.getByIndex(0)  # Sheet 0 is always the newest sheet
     oldSheet = sheets.getByIndex(1)
@@ -106,7 +108,7 @@ def main():
     argc = len(sys.argv)
     if argc != 2:
         print("Wrong parameter count!")
-        #return 
+        return 
 
     path = Path(sys.argv[1])
 
@@ -114,7 +116,12 @@ def main():
 
     copySheetData(document)
 
-    document.store() # If document already exist you can use store() instead of storeAsURL(url, properties)
+    try:
+        document.store() # If document already exist you can use store() instead of storeAsURL(url, properties)
+    except ErrorCodeIOException:
+        print("Unable to save file!")
+        document.close(True)
+        return -1
 
     document.close(True)
 

@@ -2,13 +2,14 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Find a way to write Times to libreOfficeInterface faster
-// Find a way for auto update with libreOfficeInterface
+// Python script now return -1 if failed, use this
+// Find a way for auto update with libreOfficeInterface: Update libreOffice infos with button click; If there is 5 minute no mouse movement update libreOffice infos
+// Find a way to write Times to libreOfficeInterface faster (buffer all times and write them before auto update)
 // Logout employee if there a 10 seconds no mouse input (Just remove displayed informations) -> Failed to catch mouse events on mac!
 // Look at later:
 // Time should saved with seconds in excel (also consider seconds in calculations)
 // Min. 50 employee buttons should be displayed on the left side. Maybe make a scrollbar
-// Scroll bar disapeard if there are to much check in/out times added to model
+// Scroll bar disapears if there are to much check in/out times added to model
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -126,12 +127,13 @@ void MainWindow::initLibreOfficeFile()
     params << PATH_INIT_LIBRE_OFFICE_FILE
            << PATH_LIBREOFFICE_FILE;
 
-    QPair<QString, QString> outputs = ExcelInterface::runPythonProcess(params);
-    QString errorOutput = outputs.second;
+    PythonOutput outputs = ExcelInterface::runPythonProcess(params);
+    int returnVal = outputs.returnVal;
 
-    if(!errorOutput.isEmpty())
+    // toDo next
+    if(returnVal == FAILED_TO_SAVE_FILE)
     {
-        qDebug() << errorOutput;
+
     }
 }
 
@@ -141,13 +143,8 @@ void MainWindow::initLibreOfficeSheet()
     params << PATH_INIT_LiBRE_OFFICE_SHEET
            << PATH_LIBREOFFICE_FILE;
 
-    QPair<QString, QString> outputs = ExcelInterface::runPythonProcess(params);
-    QString errorOutput = outputs.second;
-
-    if(!errorOutput.isEmpty())
-    {
-        qDebug() << errorOutput;
-    }
+    PythonOutput outputs = ExcelInterface::runPythonProcess(params);
+    int returnVal = outputs.returnVal;
 }
 
 void MainWindow::initOutputLabel()
@@ -432,5 +429,11 @@ void MainWindow::pushButton_employee_clicked(const QString &buttonText)
         }
     }
     loadEmployee(clickedEmployee);
+}
+
+// toDo remove this test button
+void MainWindow::on_tmpButton_clicked()
+{
+    initEmployeeList();
 }
 

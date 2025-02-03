@@ -5,7 +5,7 @@ ExcelInterface::ExcelInterface()
 
 }
 
-QPair<QString, QString> ExcelInterface::runPythonProcess(QStringList params)
+PythonOutput ExcelInterface::runPythonProcess(QStringList params)
 {
     QProcess p;
 
@@ -16,10 +16,23 @@ QPair<QString, QString> ExcelInterface::runPythonProcess(QStringList params)
     p.start("python3", params);
     p.waitForFinished(-1);
 
-    QString output = p.readAll();
-    QString errorOutput = p.readAllStandardError();
+    PythonOutput pythonOutput;
+    pythonOutput.returnVal = p.exitCode();
+    pythonOutput.processOutput = p.readAll();
 
-    return QPair<QString, QString>(output, errorOutput);
+    QString processErrorOutput = p.readAllStandardError();
+
+    if(!pythonOutput.processOutput.isEmpty())
+    {
+        qDebug() << pythonOutput.processOutput;
+    }
+
+    if(!processErrorOutput.isEmpty())
+    {
+        qDebug() << "Error: " << processErrorOutput;
+    }
+
+    return pythonOutput;
 }
 
 QList<Employee> ExcelInterface::getList_employee()
@@ -63,17 +76,12 @@ Employee ExcelInterface::getEmployee(unsigned int number)
     params << PATH_GET_ROW;
     params << PATH_LIBREOFFICE_FILE << QString::number(number);
 
-    QPair<QString, QString> outputs = runPythonProcess(params);
-    QString output = outputs.first;
-    QString errorOutput = outputs.second;
+    PythonOutput outputs = runPythonProcess(params);
+    int returnVal = outputs.returnVal;
+    QString output = outputs.processOutput;
 
     // allowed2CheckIn, name, time season time day, checkin1, checkout1, checkin2, checkout2, ...
     QStringList employeeData = output.split('\n');
-
-    if(!errorOutput.isEmpty())
-    {
-        qDebug() << errorOutput;
-    }
 
     Employee *pEmployee;
     bool bossSetsMorningTime = false;
@@ -164,15 +172,9 @@ void ExcelInterface::addTime(Employee *employee, eCheckTime checkTime, QTime tim
            << time.toString("hh:mm:ss")
            << QString::number(static_cast<int>(checkTime));
 
-    QPair<QString, QString> outputs = runPythonProcess(params);
-    QString output = outputs.first;
-    QString errorOutput = outputs.second;
-    if(!errorOutput.isEmpty())
-    {
-        qDebug() << errorOutput;
-    }
-
-
+    PythonOutput outputs = runPythonProcess(params);
+    int returnVal = outputs.returnVal;
+    QString output = outputs.processOutput;
 
     QString timeSeason = "";
     QString timeDay = "";

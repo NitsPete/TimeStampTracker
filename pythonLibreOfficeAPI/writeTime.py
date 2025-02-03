@@ -1,6 +1,7 @@
 import sys
 import uno
 from pathlib import Path
+from com.sun.star.task import ErrorCodeIOException
 
 HEADER_ROWS = 1
 FIRST_CHECKIN_COL = 3
@@ -71,7 +72,12 @@ def main():
 
     writeTime(document, row_number, time, isCheckInTime)
 
-    document.store() # If document already exist you can use store() instead of storeAsURL(url, properties)
+    try:
+        document.store() # If document already exist you can use store() instead of storeAsURL(url, properties)
+    except ErrorCodeIOException:
+        print("Unable to save file!")
+        document.close(True)
+        return -1
 
     document.close(True)
 
