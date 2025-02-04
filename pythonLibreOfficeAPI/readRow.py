@@ -50,13 +50,6 @@ def main():
 
     getRowInfos(document, row_number)
 
-    try:
-        document.store() # If document already exist you can use store() instead of storeAsURL(url, properties)
-    except ErrorCodeIOException:
-        print("Unable to save file!")
-        document.close(True)
-        return -1
-
     document.close(True)
 
 main()
