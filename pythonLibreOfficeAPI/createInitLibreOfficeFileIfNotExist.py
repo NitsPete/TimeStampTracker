@@ -6,6 +6,10 @@ from pathlib import Path
 from datetime import datetime
 from com.sun.star.task import ErrorCodeIOException
 
+# System Exit
+SUCCESS = 0
+FAILED_TO_SAVE_FILE = 1
+
 MAX_CHECK_TIMESS = 30
 MAX_COLUMNS = 3 + MAX_CHECK_TIMESS * 2
 MAX_NAME_ROWS = 100
@@ -140,7 +144,7 @@ def main():
     except ErrorCodeIOException:
         print("Unable to save file!")
         document.close(True)
-        return -1
+        sys.exit(FAILED_TO_SAVE_FILE)
 
     document.close(True)
 

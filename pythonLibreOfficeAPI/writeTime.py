@@ -3,6 +3,10 @@ import uno
 from pathlib import Path
 from com.sun.star.task import ErrorCodeIOException
 
+# System Exit
+SUCCESS = 0
+FAILED_TO_SAVE_FILE = 1
+
 HEADER_ROWS = 1
 FIRST_CHECKIN_COL = 3
 
@@ -77,7 +81,7 @@ def main():
     except ErrorCodeIOException:
         print("Unable to save file!")
         document.close(True)
-        return -1
+        sys.exit(FAILED_TO_SAVE_FILE)
 
     document.close(True)
 

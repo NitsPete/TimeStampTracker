@@ -4,6 +4,10 @@ from pathlib import Path
 from datetime import datetime
 from com.sun.star.task import ErrorCodeIOException
 
+# System Exit
+SUCCESS = 0
+FAILED_TO_SAVE_FILE = 1
+
 MAX_COLUMNS = 63
 MAX_ROWS = 101
 
@@ -55,7 +59,7 @@ def copySheetData(document):
     else:
         print("Sheet already exist!")
         document.close(True)
-        sys.exit(0)
+        sys.exit(SUCCESS)
 
     newSheet = sheets.getByIndex(0)  # Sheet 0 is always the newest sheet
     oldSheet = sheets.getByIndex(1)
@@ -121,7 +125,7 @@ def main():
     except ErrorCodeIOException:
         print("Unable to save file!")
         document.close(True)
-        return -1
+        sys.exit(FAILED_TO_SAVE_FILE)
 
     document.close(True)
 
