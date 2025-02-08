@@ -1,12 +1,12 @@
 #include "employee.h"
 
-Employee::Employee(unsigned int uniqueId, bool allowed2CheckIn, QString name, QString totalTimeToday, QString totalTimeSeason)
+Employee::Employee(unsigned int uniqueId, bool allowed2CheckIn, QString name, double totalTimeToday, double totalTimeSeason)
 {
     this->uniqueId = uniqueId;
     this->allowed2CheckIn = allowed2CheckIn;
     this->name = name;
-    this->totalTimeToday = totalTimeToday;
-    this->totalTimeSeason = totalTimeSeason;
+    setTotalTimeToday(totalTimeToday);
+    setTotalTimeSeason(totalTimeSeason);
 
     this->bossSetsMorningTime = false;
 }
@@ -99,6 +99,16 @@ QString Employee::getTotalTimeSeason()
     return this->totalTimeSeason;
 }
 
+double Employee::getTotalTimeTodayDoubleValue()
+{
+    return totalTimeTodayDoubleValue;
+}
+
+double Employee::getTotalTimeSeasonDoubleValue()
+{
+    return totalTimeSeasonDoubleValue;
+}
+
 QStringList Employee::getList_checkInToday()
 {
     return list_checkInToday;
@@ -119,12 +129,14 @@ void Employee::setBossSetsMorningTime(bool bossSetsMorningTime)
     this->bossSetsMorningTime = bossSetsMorningTime;
 }
 
-void Employee::setTotalTimeToday(QString totalTimeToday)
+void Employee::setTotalTimeToday(double totalTimeToday)
 {
-    this->totalTimeToday = totalTimeToday;
+    this->totalTimeTodayDoubleValue = totalTimeToday;
+    this->totalTimeToday = QLocale(QLocale::German).toString(totalTimeToday, 'f', 1) + " h";
 }
 
-void Employee::setTotalTimeSeason(QString totalTimeSeason)
+void Employee::setTotalTimeSeason(double totalTimeSeason)
 {
-    this->totalTimeSeason = totalTimeSeason;
+    this->totalTimeSeasonDoubleValue = totalTimeSeason;
+    this->totalTimeSeason = QLocale(QLocale::German).toString(totalTimeSeason, 'f', 1) + " h";
 }

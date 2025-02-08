@@ -3,11 +3,12 @@
 
 #include <QStringList>
 #include <QTime>
+#include <QLocale>
 
 class Employee
 {
 public:
-    Employee(unsigned int uniqueId, bool allowed2CheckIn, QString name, QString totalTimeToday, QString totalTimeSeason);
+    Employee(unsigned int uniqueId, bool allowed2CheckIn, QString name, double totalTimeToday, double totalTimeSeason);
 
     void addCheckInTime(QTime checkInTime); // If you want to also update the excel interface uses ExcelInterface::addCheckInTime instead
     void addCheckOutTime(QTime addCheckOutTime); // If you want to also update the excel interface uses ExcelInterface::addCheckOutTime instead
@@ -20,13 +21,15 @@ public:
     QString getButtonText(); // <uniqueId>: <name>
     QString getTotalTimeToday();
     QString getTotalTimeSeason();
+    double getTotalTimeTodayDoubleValue();
+    double getTotalTimeSeasonDoubleValue();
     QStringList getList_checkInToday();
     QStringList getList_checkOutToday();
     unsigned int getUniqueId();
 
     void setBossSetsMorningTime(bool bossSetsMorningTime);
-    void setTotalTimeToday(QString totalTimeToday);
-    void setTotalTimeSeason(QString totalTimeSeason);
+    void setTotalTimeToday(double totalTimeToday);
+    void setTotalTimeSeason(double totalTimeSeason);
 
 private:
     unsigned int uniqueId;
@@ -35,6 +38,8 @@ private:
     QString name; // <second name> <first name>
     QString totalTimeToday;
     QString totalTimeSeason;
+    double totalTimeTodayDoubleValue;
+    double totalTimeSeasonDoubleValue;
     QStringList list_checkInToday; // Morning time set by boss is always the first value of the list
     QStringList list_checkOutToday;
 

@@ -2,9 +2,9 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Python script now return -1 if failed, use this
-// Find a way for auto update with libreOfficeInterface: Update libreOffice infos with button click; If there is 5 minute no mouse movement update libreOffice infos
-// Find a way to write Times to libreOfficeInterface faster (buffer all times and write them before auto update)
+// Python script writeTime should not return season/day-Time infos anymore
+// Update python script writeTime to write all infos add once
+// If there is 5 minute no mouse movement update libreOffice infos: writeBufferedTimes2database should return if failed or not and should not clear the list if failed
 // Logout employee if there a 10 seconds no mouse input (Just remove displayed informations) -> Failed to catch mouse events on mac!
 // Look at later:
 // Time should saved with seconds in excel (also consider seconds in calculations)
@@ -223,7 +223,7 @@ void MainWindow::pushButton_come_clicked()
         return;
     }
 
-    ExcelInterface::addCheckInTime(currentEmployee, QTime::currentTime());
+    list_bufferedTimes.append(ExcelInterface::addCheckInTime(currentEmployee, QTime::currentTime()));
     setPushButtonEmployeeColor(currentEmployee);
 
     flashOutputLabel = false;
@@ -243,7 +243,7 @@ void MainWindow::pushButton_go_clicked()
         return;
     }
 
-    ExcelInterface::addCheckOutTime(currentEmployee, QTime::currentTime());
+    list_bufferedTimes.append(ExcelInterface::addCheckOutTime(currentEmployee, QTime::currentTime()));
     setPushButtonEmployeeColor(currentEmployee);
 
     flashOutputLabel = false;
@@ -439,6 +439,7 @@ void MainWindow::pushButton_employee_clicked(const QString &buttonText)
 // toDo remove this test button
 void MainWindow::on_tmpButton_clicked()
 {
-    initEmployeeList();
+    ExcelInterface::writeBufferedTimes2database(&list_bufferedTimes);
+    //initEmployeeList();
 }
 

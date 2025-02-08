@@ -3,7 +3,6 @@
 
 #include <QList>
 #include <QProcess>
-#include <QLocale>
 #include <QPair>
 #include <QDebug>
 
@@ -32,6 +31,13 @@ struct PythonOutput
     QString processOutput;
 };
 
+struct BufferedTime
+{
+    QString uniqueId;
+    QString time;
+    QString checkTime;
+};
+
 class ExcelInterface
 {
 public:
@@ -39,13 +45,13 @@ public:
 
     static PythonOutput runPythonProcess(QStringList params); // QPair<ourput, errorOutput>
     static QList<Employee> getList_employee();
-    static void addCheckInTime(Employee *employee, QTime checkInTime);
-    static void addCheckOutTime(Employee *employee, QTime checkOutTime);
-
+    static BufferedTime addCheckInTime(Employee *employee, QTime checkInTime);
+    static BufferedTime addCheckOutTime(Employee *employee, QTime checkOutTime);
+    static void writeBufferedTimes2database(QList<BufferedTime> *list_bufferedTimes);
 
 private:
     static Employee getEmployee(unsigned int number); // number=2 returns second employee on the list
-    static void addTime(Employee *employee, eCheckTime checkTime, QTime time);
+    static BufferedTime addTime(Employee *employee, eCheckTime checkTime, QTime time);
 };
 
 #endif // EXCELINTERFACE_H

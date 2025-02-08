@@ -58,16 +58,16 @@ QList<Employee> ExcelInterface::getList_employee()
     return list_employee;
 }
 
-void ExcelInterface::addCheckInTime(Employee *employee, QTime checkInTime)
+BufferedTime ExcelInterface::addCheckInTime(Employee *employee, QTime checkInTime)
 {
     employee->addCheckInTime(checkInTime);
-    addTime(employee, eCheckTime::CHECKIN, checkInTime);
+    return addTime(employee, eCheckTime::CHECKIN, checkInTime);
 }
 
-void ExcelInterface::addCheckOutTime(Employee *employee, QTime checkOutTime)
+BufferedTime ExcelInterface::addCheckOutTime(Employee *employee, QTime checkOutTime)
 {
     employee->addCheckOutTime(checkOutTime);
-    addTime(employee, eCheckTime::CHECKOUT, checkOutTime);
+    return addTime(employee, eCheckTime::CHECKOUT, checkOutTime);
 }
 
 Employee ExcelInterface::getEmployee(unsigned int number)
@@ -86,8 +86,8 @@ Employee ExcelInterface::getEmployee(unsigned int number)
     bool bossSetsMorningTime = false;
     bool allowed2CheckIn = false;
     QString name = "";
-    QString timeSeason = "";
-    QString timeDay = "";
+    double timeSeason = 0;
+    double timeDay = 0;
 
     if(employeeData.length() > 0)
     {
@@ -104,8 +104,7 @@ Employee ExcelInterface::getEmployee(unsigned int number)
 
     if(employeeData.length() > 2)
     {
-        timeSeason = QLocale(QLocale::German).toString(employeeData.at(2).toDouble(), 'f', 1);
-        timeSeason += " h";
+        timeSeason = employeeData.at(2).toDouble();
     }
 
     if(employeeData.length() > 3)
@@ -120,9 +119,7 @@ Employee ExcelInterface::getEmployee(unsigned int number)
             minute = timeStamps.at(1).toInt();
             second = timeStamps.at(2).toInt();
         }
-        double time = hour + (double)minute / 60 + (double)second / 3600;
-        timeDay = QLocale(QLocale::German).toString(time, 'f', 1);
-        timeDay += " h";
+        timeDay = hour + (double)minute / 60 + (double)second / 3600;
     }
 
     pEmployee = new Employee(number, allowed2CheckIn, name, timeDay, timeSeason);
@@ -162,43 +159,48 @@ Employee ExcelInterface::getEmployee(unsigned int number)
 
 }
 
-void ExcelInterface::addTime(Employee *employee, eCheckTime checkTime, QTime time)
+BufferedTime ExcelInterface::addTime(Employee *employee, eCheckTime checkTime, QTime time)
 {
-    QStringList params;
-    params << PATH_WRITE_TIME
-           << PATH_LIBREOFFICE_FILE
-           << QString::number(employee->getUniqueId())
-           << time.toString("hh:mm:ss")
-           << QString::number(static_cast<int>(checkTime));
+    BufferedTime bufferedTime;
+    bufferedTime.uniqueId = QString::number(employee->getUniqueId());
+    bufferedTime.time = time.toString("hh:mm:ss");
+    bufferedTime.checkTime = QString::number(static_cast<int>(checkTime));
 
-    PythonOutput outputs = runPythonProcess(params);
-    int returnVal = outputs.returnVal; // toDo next, buffer this timer and write all of the buffer add once (also update season and timeDay"
-    QString output = outputs.processOutput;
 
-    QString timeSeason = "";
-    QString timeDay = "";
+    double timeSeason = employee->getTotalTimeSeasonDoubleValue();
+    double timeDay = employee->getTotalTimeTodayDoubleValue();
 
-    QStringList times = output.split("\n");
-    if(times.length() >= 2)
+    // Update time season + today
+    QStringList list_checkInTimes = employee->getList_checkInToday();
+    if((checkTime == eCheckTime::CHECKOUT) && !list_checkInTimes.isEmpty())
     {
-        timeSeason = QLocale(QLocale::German).toString(times.at(0).toDouble(), 'f', 1) + " h";
-        timeDay = times.at(1);
-
-        int hour = 0;
-        int minute = 0;
-        int second = 0;
-        QStringList timeStamps = timeDay.split(':');
-        if(timeStamps.length() >= 3)
-        {
-            hour = timeStamps.at(0).toInt();
-            minute = timeStamps.at(1).toInt();
-            second = timeStamps.at(2).toInt();
-        }
-        double time = hour + (double)minute / 60 + (double)second / 3600;
-        timeDay = QLocale(QLocale::German).toString(time, 'f', 1);
-        timeDay += " h";
+        QTime checkInTime = QTime::fromString(list_checkInTimes.last(), "hh:mm");
+        double timeDiff = checkInTime.secsTo(time) / 3600.0;
+        timeSeason += timeDiff;
+        timeDay += timeDiff;
     }
 
     employee->setTotalTimeSeason(timeSeason);
     employee->setTotalTimeToday(timeDay);
+
+    return bufferedTime;
+}
+
+// toDo next: Write python script to write data at once to database
+void ExcelInterface::writeBufferedTimes2database(QList<BufferedTime> *list_bufferedTimes)
+{
+    while(!list_bufferedTimes->isEmpty())
+    {
+        BufferedTime bufferedTime = list_bufferedTimes->takeFirst();
+
+        QStringList params;
+        params << PATH_WRITE_TIME
+               << PATH_LIBREOFFICE_FILE
+               << bufferedTime.uniqueId
+               << bufferedTime.time
+               << bufferedTime.checkTime;
+
+        PythonOutput outputs = runPythonProcess(params);
+        int returnVal = outputs.returnVal; // toDo next: Look if check is neccessary
+    }
 }

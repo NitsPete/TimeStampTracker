@@ -43,6 +43,7 @@ private:
     QTimer *timer_flashOutputLabel;
     Employee *currentEmployee = nullptr;
     QList<Employee> list_employee;
+    QList<BufferedTime> list_bufferedTimes; // Contains times which aren't synchronize with database
 
     const QString BUTTON_COLOR_RED = "QPushButton { color: white; background-color: red; border: none; }";
     const QString BUTTON_COLOR_GREEN = "QPushButton { color: white; background-color: green; border: none; }";
