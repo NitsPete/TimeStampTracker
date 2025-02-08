@@ -77,7 +77,6 @@ Employee ExcelInterface::getEmployee(unsigned int number)
     params << PATH_LIBREOFFICE_FILE << QString::number(number);
 
     PythonOutput outputs = runPythonProcess(params);
-    int returnVal = outputs.returnVal;
     QString output = outputs.processOutput;
 
     // allowed2CheckIn, name, time season time day, checkin1, checkout1, checkin2, checkout2, ...
@@ -173,7 +172,7 @@ void ExcelInterface::addTime(Employee *employee, eCheckTime checkTime, QTime tim
            << QString::number(static_cast<int>(checkTime));
 
     PythonOutput outputs = runPythonProcess(params);
-    int returnVal = outputs.returnVal;
+    int returnVal = outputs.returnVal; // toDo next, buffer this timer and write all of the buffer add once (also update season and timeDay"
     QString output = outputs.processOutput;
 
     QString timeSeason = "";

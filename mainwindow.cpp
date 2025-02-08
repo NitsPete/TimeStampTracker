@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Put all python script const in one file and import them
 // Python script now return -1 if failed, use this
 // Find a way for auto update with libreOfficeInterface: Update libreOffice infos with button click; If there is 5 minute no mouse movement update libreOffice infos
 // Find a way to write Times to libreOfficeInterface faster (buffer all times and write them before auto update)
@@ -131,10 +130,9 @@ void MainWindow::initLibreOfficeFile()
     PythonOutput outputs = ExcelInterface::runPythonProcess(params);
     int returnVal = outputs.returnVal;
 
-    // toDo next
     if(returnVal == FAILED_TO_SAVE_FILE)
     {
-
+        QMessageBox::critical(nullptr, "Unabel to save file", "Please ask admin to check premission of folder!");
     }
 }
 
