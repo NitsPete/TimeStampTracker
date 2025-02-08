@@ -3,12 +3,7 @@ import uno
 from pathlib import Path
 from com.sun.star.task import ErrorCodeIOException
 
-# System Exit
-SUCCESS = 0
-FAILED_TO_SAVE_FILE = 1
-
-HEADER_ROWS = 1
-FIRST_CHECKIN_COL = 3
+from constants import *
 
 def connect2libreOffice():
     local_context = uno.getComponentContext()
@@ -37,7 +32,7 @@ def writeTime(document, row_number, time, isCheckInTime):
     if cell.CellBackColor == -1:
         skipFirstCheckInTime = True
 
-    col_number = FIRST_CHECKIN_COL
+    col_number = COLUMN_FIRST_CHECK_IN
     if not isCheckInTime:
         col_number += 1
     elif skipFirstCheckInTime:

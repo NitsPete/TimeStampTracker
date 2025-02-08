@@ -18,7 +18,7 @@ const QString PATH_WRITE_TIME = PATH + "writeTime.py";
 const QString PATH_INIT_LIBRE_OFFICE_FILE = PATH + "createInitLibreOfficeFileIfNotExist.py";
 const QString PATH_INIT_LiBRE_OFFICE_SHEET = PATH + "createNewSheet.py";
 
-const int FAILED_TO_SAVE_FILE = -1;
+const int FAILED_TO_SAVE_FILE = 1;
 
 typedef enum eCheckTime
 {

@@ -3,8 +3,7 @@ import uno
 from pathlib import Path
 from com.sun.star.task import ErrorCodeIOException
 
-HEADER_ROWS = 1
-FIRST_CHECKIN_COL = 3
+from constants import *
 
 def connect2libreOffice():
     local_context = uno.getComponentContext()
@@ -33,7 +32,7 @@ def getRowInfos(document, row_number):
         if(col_index == 0):
             print(cell.CellBackColor)
 
-        if(cell.getString() == "" and col_index != FIRST_CHECKIN_COL):
+        if(cell.getString() == "" and col_index != COLUMN_FIRST_CHECK_IN):
             break
         print(cell.getString())
 

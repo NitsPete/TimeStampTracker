@@ -4,19 +4,7 @@ from pathlib import Path
 from datetime import datetime
 from com.sun.star.task import ErrorCodeIOException
 
-# System Exit
-SUCCESS = 0
-FAILED_TO_SAVE_FILE = 1
-
-MAX_COLUMNS = 63
-MAX_ROWS = 101
-
-COLUMN_NAME = 0
-COLUMN_TIME_SEASON = 1
-COLUMN_TIME_DAY = 2
-COLUMN_FIRST_CHECK_IN = 3
-
-ROW_HEADER = 0
+from constants import *
 
 def connect2libreOffice():
     local_context = uno.getComponentContext()
