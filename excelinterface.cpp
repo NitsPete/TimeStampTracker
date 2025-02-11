@@ -186,21 +186,27 @@ BufferedTime ExcelInterface::addTime(Employee *employee, eCheckTime checkTime, Q
     return bufferedTime;
 }
 
-// toDo next: Write python script to write data at once to database
 void ExcelInterface::writeBufferedTimes2database(QList<BufferedTime> *list_bufferedTimes)
 {
-    while(!list_bufferedTimes->isEmpty())
+    if(list_bufferedTimes->isEmpty())
     {
-        BufferedTime bufferedTime = list_bufferedTimes->takeFirst();
+        return;
+    }
 
-        QStringList params;
-        params << PATH_WRITE_TIME
-               << PATH_LIBREOFFICE_FILE
-               << bufferedTime.uniqueId
+    QStringList params;
+    params << PATH_WRITE_TIME
+           << PATH_LIBREOFFICE_FILE;
+    for(BufferedTime bufferedTime : *list_bufferedTimes)
+    {
+        params << bufferedTime.uniqueId
                << bufferedTime.time
                << bufferedTime.checkTime;
+    }
+    PythonOutput outputs = runPythonProcess(params);
+    int returnVal = outputs.returnVal;
 
-        PythonOutput outputs = runPythonProcess(params);
-        int returnVal = outputs.returnVal; // toDo next: Look if check is neccessary
+    if(returnVal == SUCCESS)
+    {
+        list_bufferedTimes->clear();
     }
 }

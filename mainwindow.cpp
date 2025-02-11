@@ -2,9 +2,9 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Python script writeTime should not return season/day-Time infos anymore
-// Update python script writeTime to write all infos add once
+// Read all database infos at once with one python script call to be faster in initEmployeeList
 // If there is 5 minute no mouse movement update libreOffice infos: writeBufferedTimes2database should return if failed or not and should not clear the list if failed
+// If there is 5 minute no mouse movement also sync again with database
 // Logout employee if there a 10 seconds no mouse input (Just remove displayed informations) -> Failed to catch mouse events on mac!
 // Look at later:
 // Time should saved with seconds in excel (also consider seconds in calculations)
