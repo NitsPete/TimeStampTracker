@@ -33,12 +33,14 @@ def writeTime(document, row_number, time, isCheckInTime):
         if cell.CellBackColor == -1:
             skipFirstCheckInTime = True
 
+        # Find first cell to write time
         col_number = COLUMN_FIRST_CHECK_IN
         if not isCheckInTime[i]:
             col_number += 1
         elif skipFirstCheckInTime:
             col_number += 2
 
+        # Write time to first empty cell
         while True:
             cell = sheet.getCellByPosition(col_number, row_number[i] + HEADER_ROWS)
 

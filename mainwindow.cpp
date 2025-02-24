@@ -2,10 +2,13 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
+// Bug: Daten werden nicht richtig gespeichert (z.B. Ausstempeln und wieder Einstempeln bei Peter funktioniert nicht richitg)
+// Bug: Wenn nur z.B. 2 Sekundne ein und ausgestempelt wird, dann wird die Zeit in 2.31481481481888E-05 angegeben. Dies füht dazu das sich das programm nicht mehr richtig initialisiert
 // Read all database infos at once with one python script call to be faster in initEmployeeList
 // If there is 5 minute no mouse movement update libreOffice infos: writeBufferedTimes2database should return if failed or not and should not clear the list if failed
 // If there is 5 minute no mouse movement also sync again with database
 // Logout employee if there a 10 seconds no mouse input (Just remove displayed informations) -> Failed to catch mouse events on mac!
+// If new libreOfficeSheet is created, logout user and reinit all data
 // Look at later:
 // Time should saved with seconds in excel (also consider seconds in calculations)
 // Min. 50 employee buttons should be displayed on the left side. Maybe make a scrollbar
@@ -43,7 +46,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    if (libreOfficeServer->state() != QProcess::NotRunning) {
+    if (libreOfficeServer->state() != QProcess::NotRunning)
+    {
         libreOfficeServer->kill();
         libreOfficeServer->waitForFinished();
     }

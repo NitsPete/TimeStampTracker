@@ -22,32 +22,37 @@ def openDocument(path: Path):
     document = desktop.loadComponentFromURL(file_url, "_blank", 0, ())
     return document
 
-def getRowInfos(document, row_number):
+def getSheetData(document):
     sheets = document.Sheets
     sheet = sheets.getByIndex(0)  # Sheet 0 is always the newest sheet
     column_count = sheet.getColumns().getCount()
 
-    for col_index in range(column_count):
-        cell = sheet.getCellByPosition(col_index, row_number + HEADER_ROWS)
-        if(col_index == 0):
-            print(cell.CellBackColor)
+    for row_index in range(ROW_FIRST_DATA, MAX_NAME_ROWS + 1):
+        for col_index in range(column_count):
+            cell = sheet.getCellByPosition(col_index, row_index)
 
-        if(cell.getString() == "" and col_index != COLUMN_FIRST_CHECK_IN):
-            break
-        print(cell.getString())
+            if( (not cell.getString()) and (col_index != COLUMN_FIRST_CHECK_IN)):
+                break
+
+            # First column in loop
+            if(col_index == COLUMN_NAME):
+                print(row_index - HEADER_ROWS)
+                print(cell.CellBackColor)
+
+            print(cell.getString())
+        print("\r") # Indicates end of employee infos (This value is print as "\r\n")
 
 def main(): 
     argc = len(sys.argv)
-    if argc != 3:
+    if argc != 2:
         print("Wrong parameter count!")
         return 
 
     path = Path(sys.argv[1])
-    row_number = int(sys.argv[2])
 
     document = openDocument(path)
 
-    getRowInfos(document, row_number)
+    getSheetData(document)
 
     document.close(True)
 

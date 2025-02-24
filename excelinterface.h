@@ -12,7 +12,7 @@ static const QString PATH_LIBREOFFICE_FILE = "/home/admin/SharedFolder/NewTestFi
 
 // toDo Make path dynamic
 const QString PATH = "/home/admin/Desktop/TimeStampTracker/pythonLibreOfficeAPI/";
-const QString PATH_GET_ROW = PATH + "readRow.py";
+const QString PATH_GET_DATA = PATH + "readData.py";
 const QString PATH_WRITE_TIME = PATH + "writeTime.py";
 const QString PATH_INIT_LIBRE_OFFICE_FILE = PATH + "createInitLibreOfficeFileIfNotExist.py";
 const QString PATH_INIT_LiBRE_OFFICE_SHEET = PATH + "createNewSheet.py";
@@ -51,7 +51,17 @@ public:
     static void writeBufferedTimes2database(QList<BufferedTime> *list_bufferedTimes);
 
 private:
-    static Employee getEmployee(unsigned int number); // number=2 returns second employee on the list
+    enum EmployeeData
+    {
+        RowNumber,
+        Allowed2CheckIn,
+        Name,
+        TimeSeason,
+        TimeDay,
+        CheckInOutTimes
+    };
+
+    static Employee getEmployee(QString output);
     static BufferedTime addTime(Employee *employee, eCheckTime checkTime, QTime time);
 };
 

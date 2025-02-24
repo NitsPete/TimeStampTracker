@@ -37,23 +37,21 @@ PythonOutput ExcelInterface::runPythonProcess(QStringList params)
 
 QList<Employee> ExcelInterface::getList_employee()
 {
+    QStringList params;
+    params << PATH_GET_DATA;
+    params << PATH_LIBREOFFICE_FILE;
+
+    PythonOutput outputs = runPythonProcess(params);
+    QString output = outputs.processOutput;
+
+    QStringList list_employeeDataStr = output.split("\r\n");
+    list_employeeDataStr.removeAll("");
+
     QList<Employee> list_employee;
-
-    unsigned int number = 0;
-    bool allEmployeeFound = false;
-    do{
-       Employee employee = getEmployee(number);
-
-       if(!employee.getName().isEmpty())
-       {
-           list_employee.append(employee);
-       }else
-       {
-           allEmployeeFound = true;
-       }
-
-       ++number;
-    }while(!allEmployeeFound);
+    for(QString employeeDataStr : list_employeeDataStr)
+    {
+        list_employee.append(getEmployee(employeeDataStr));
+    }
 
     return list_employee;
 }
@@ -70,49 +68,48 @@ BufferedTime ExcelInterface::addCheckOutTime(Employee *employee, QTime checkOutT
     return addTime(employee, eCheckTime::CHECKOUT, checkOutTime);
 }
 
-Employee ExcelInterface::getEmployee(unsigned int number)
+Employee ExcelInterface::getEmployee(QString output)
 {
-    QStringList params;
-    params << PATH_GET_ROW;
-    params << PATH_LIBREOFFICE_FILE << QString::number(number);
-
-    PythonOutput outputs = runPythonProcess(params);
-    QString output = outputs.processOutput;
-
-    // allowed2CheckIn, name, time season time day, checkin1, checkout1, checkin2, checkout2, ...
+    // uniqueId, allowed2CheckIn, name, time season, time day, checkin1, checkout1, checkin2, checkout2, ...
     QStringList employeeData = output.split('\n');
 
     Employee *pEmployee;
+    unsigned int number = 0;
     bool bossSetsMorningTime = false;
     bool allowed2CheckIn = false;
     QString name = "";
     double timeSeason = 0;
     double timeDay = 0;
 
-    if(employeeData.length() > 0)
+    if(employeeData.length() > EmployeeData::RowNumber)
     {
-        if(employeeData.at(0) != "-1")
+        number = employeeData.at(EmployeeData::RowNumber).toUInt();
+    }
+
+    if(employeeData.length() > EmployeeData::Allowed2CheckIn)
+    {
+        if(employeeData.at(EmployeeData::Allowed2CheckIn) != "-1")
         {
             allowed2CheckIn = true;
         }
     }
 
-    if(employeeData.length() > 1)
+    if(employeeData.length() > EmployeeData::Name)
     {
-        name = employeeData.at(1);
+        name = employeeData.at(EmployeeData::Name);
     }
 
-    if(employeeData.length() > 2)
+    if(employeeData.length() > EmployeeData::TimeSeason)
     {
-        timeSeason = employeeData.at(2).toDouble();
+        timeSeason = employeeData.at(EmployeeData::TimeSeason).toDouble();
     }
 
-    if(employeeData.length() > 3)
+    if(employeeData.length() > EmployeeData::TimeDay)
     {
         int hour = 0;
         int minute = 0;
         int second = 0;
-        QStringList timeStamps = employeeData.at(3).split(':');
+        QStringList timeStamps = employeeData.at(EmployeeData::TimeDay).split(':');
         if(timeStamps.length() >= 3)
         {
             hour = timeStamps.at(0).toInt();
@@ -124,9 +121,9 @@ Employee ExcelInterface::getEmployee(unsigned int number)
 
     pEmployee = new Employee(number, allowed2CheckIn, name, timeDay, timeSeason);
 
-    for(int i = 4; i < employeeData.length(); ++i)
+    for(int i = EmployeeData::CheckInOutTimes; i < employeeData.length(); ++i)
     {
-        if((i == 4) && !allowed2CheckIn && !employeeData.at(4).isEmpty())
+        if((i == EmployeeData::CheckInOutTimes) && !allowed2CheckIn && !employeeData.at(EmployeeData::CheckInOutTimes).isEmpty())
         {
             bossSetsMorningTime = true;
         }

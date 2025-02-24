@@ -14,6 +14,7 @@ COLUMN_FIRST_CHECK_OUT = 4
 
 # Row definitions
 ROW_HEADER = 0
+ROW_FIRST_DATA = 1
 
 # LibreOffice-Sheet max size definitions
 MAX_CHECK_TIMESS = 30
