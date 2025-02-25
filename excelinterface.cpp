@@ -139,7 +139,7 @@ Employee ExcelInterface::getEmployee(QString output)
                 minute = timeStamps.at(1).toInt();
             }
 
-            if(i%2 == 0)
+            if((i-EmployeeData::CheckInOutTimes)%2 == 0)
             {
                 pEmployee->addCheckInTime(QTime(hour, minute));
             }else
@@ -153,7 +153,6 @@ Employee ExcelInterface::getEmployee(QString output)
     pEmployee->setBossSetsMorningTime(bossSetsMorningTime);
 
     return *pEmployee;
-
 }
 
 BufferedTime ExcelInterface::addTime(Employee *employee, eCheckTime checkTime, QTime time)

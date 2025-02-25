@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Bug: Daten werden nicht richtig gespeichert (z.B. Ausstempeln und wieder Einstempeln bei Peter funktioniert nicht richitg)
 // Bug: Wenn nur z.B. 2 Sekundne ein und ausgestempelt wird, dann wird die Zeit in 2.31481481481888E-05 angegeben. Dies füht dazu das sich das programm nicht mehr richtig initialisiert
 // Read all database infos at once with one python script call to be faster in initEmployeeList
 // If there is 5 minute no mouse movement update libreOffice infos: writeBufferedTimes2database should return if failed or not and should not clear the list if failed
