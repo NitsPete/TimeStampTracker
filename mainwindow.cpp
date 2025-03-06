@@ -6,6 +6,7 @@
 // If there is 5 minute no mouse movement also sync again with database
 // Logout employee if there a 10 seconds no mouse input (Just remove displayed informations) -> Failed to catch mouse events on mac!
 // If new libreOfficeSheet is created, logout user and reinit all data
+// Check how many people i can display on my tv screen
 // Look at later:
 // Time should saved with seconds in excel (also consider seconds in calculations)
 // Min. 50 employee buttons should be displayed on the left side. Maybe make a scrollbar
@@ -17,19 +18,24 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    qApp->installEventFilter(this); // Need filter to catch mouse movement
+
     initLibreOfficeServer();
     initLibreOfficeFile();
     initLibreOfficeSheet();
 
     lastCheckedDate = QDate::currentDate();
     timer_check4newDay = new QTimer(this);
+    timer_noMouseMovement = new QTimer(this);
 
     connect(ui->pushButton_come, &QPushButton::clicked, this, &MainWindow::pushButton_come_clicked);
     connect(ui->pushButton_go, &QPushButton::clicked, this, &MainWindow::pushButton_go_clicked);
 
     connect(timer_check4newDay, &QTimer::timeout, this, &MainWindow::check4newDay);
+    connect(timer_noMouseMovement, &QTimer::timeout, this, &MainWindow::noMouseMovement);
 
-    timer_check4newDay->start(60000); // Check every 60 seconds
+    timer_check4newDay->start(CHECK4NEW_DAY_INTERVALL);
+    timer_noMouseMovement->start(NO_MOUSE_MOVEMENT_INTERVALL);
 
     initOutputLabel();
 
@@ -254,6 +260,23 @@ void MainWindow::pushButton_go_clicked()
     ui->label_output->setText(currentEmployee->getName() + " GATA LUCRU!");
     timer_flashOutputLabel->start(FLASH_INTERVALL); // ms
     unloadEmployee();
+}
+// toDo next
+void MainWindow::noMouseMovement()
+{
+    ++noMouseMovementCounter;
+
+    if((noMouseMovementCounter * NO_MOUSE_MOVEMENT_INTERVALL) % INACTIVE_USER_TIME == 0)
+    {
+        // toDo checkout user here
+    }
+
+    if((noMouseMovementCounter * NO_MOUSE_MOVEMENT_INTERVALL) % UPLOAD_TIMES_TIME == 0)
+    {
+        // toDo upload buffered times here
+    }
+
+    // toDo sync with database
 }
 
 void MainWindow::loadEmployee(Employee *employee)
