@@ -90,6 +90,7 @@ def copySheetData(document):
             
             if columnNumber == COLUMN_TIME_DAY:
                 newCell.Formula = oldCell.Formula
+                newCell.NumberFormat = oldCell.NumberFormat
 
         # If all names are add set width of column again 
         if columnNumber == (MAX_COLUMNS-1):

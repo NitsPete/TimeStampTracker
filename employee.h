@@ -5,6 +5,8 @@
 #include <QTime>
 #include <QLocale>
 
+#include <QDebug>
+
 class Employee
 {
 public:

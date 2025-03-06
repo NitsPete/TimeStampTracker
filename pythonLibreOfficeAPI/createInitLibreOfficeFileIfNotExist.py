@@ -66,7 +66,7 @@ def addHeaderRow(sheet):
 def addFormula(sheet):
 
     for i in range(0, MAX_NAME_ROWS):      
-        rowNumber = i + 1 # Because of header line
+        rowNumber = i + HEADER_ROWS
 
         # Add time season 
         seasonFormula = "=("       
@@ -90,6 +90,21 @@ def addFormula(sheet):
         cellTimeDay = sheet.getCellByPosition(COLUMN_TIME_DAY, rowNumber)
         cellTimeDay.Formula = dayFormula
 
+def addCellFormat(sheet, document):
+    numberFormat = document.NumberFormats
+    locale = uno.createUnoStruct("com.sun.star.lang.Locale")
+    formatKey = numberFormat.queryKey("HH:MM:SS", locale, True)
+
+    # Create format if not exist
+    if formatKey == -1:
+        formatKey = numberFormat.addNew("HH:MM:SS", locale)
+
+    for i in range(0, MAX_NAME_ROWS):
+        rowNumber = i + HEADER_ROWS
+        cellTimeDay = sheet.getCellByPosition(COLUMN_TIME_DAY, rowNumber)
+        cellTimeDay.NumberFormat = formatKey
+
+
 def initDocument(document):
     sheets = document.Sheets
     sheet = sheets.getByIndex(0) 
@@ -100,6 +115,8 @@ def initDocument(document):
     addHeaderRow(sheet)
 
     addFormula(sheet)
+
+    addCellFormat(sheet, document)
     
     for i in range(0, MAX_COLUMNS):
         sheet.Columns.getByIndex(i).OptimalWidth = True
