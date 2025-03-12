@@ -2,9 +2,6 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// If there is 5 minute no mouse movement sync with database
-// If a new day start just restart the pi?
-// If new libreOfficeSheet is created, logout user and reinit all data
 // Check how many people i can display on my tv screen
 // Look at later:
 // void MainWindow::noMouseMovement() -> If data where wirte to database GUI is frozen!
@@ -260,26 +257,29 @@ void MainWindow::pushButton_go_clicked()
     timer_flashOutputLabel->start(FLASH_INTERVALL); // ms
     unloadEmployee();
 }
-// toDo next
+
 void MainWindow::noMouseMovement()
 {
     ++noMouseMovementCounter;
 
-    if((noMouseMovementCounter * NO_MOUSE_MOVEMENT_INTERVALL) == INACTIVE_USER_TIME)
+    if((noMouseMovementCounter * NO_MOUSE_MOVEMENT_INTERVALL) == INACTIVE_USER_TIMEOUT_TIME)
     {
         ui->label_output->setText("");
         unloadEmployee();
     }
 
-    if(((noMouseMovementCounter * NO_MOUSE_MOVEMENT_INTERVALL) % UPLOAD_TIMES_TIME) == 0)
+    if(((noMouseMovementCounter * NO_MOUSE_MOVEMENT_INTERVALL) % UPLOAD_AND_REINIT_INTERVALL) == 0)
     {
         if(!list_bufferedTimes.isEmpty())
         {
             ExcelInterface::writeBufferedTimes2database(&list_bufferedTimes);
         }
-    }
 
-    // toDo sync with database
+        if(list_bufferedTimes.isEmpty())
+        {
+            initEmployeeList();
+        }
+    }
 }
 
 void MainWindow::loadEmployee(Employee *employee)
@@ -462,11 +462,3 @@ void MainWindow::pushButton_employee_clicked(const QString &buttonText)
     }
     loadEmployee(clickedEmployee);
 }
-
-// toDo remove this test button
-void MainWindow::on_tmpButton_clicked()
-{
-    ExcelInterface::writeBufferedTimes2database(&list_bufferedTimes);
-    //initEmployeeList();
-}
-
