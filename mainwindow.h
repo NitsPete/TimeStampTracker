@@ -63,7 +63,7 @@ private:
 
     const unsigned int NO_MOUSE_MOVEMENT_INTERVALL = 5 * 1000; // [ms] Value must be less than blow values
     const unsigned int INACTIVE_USER_TIME = 2 * NO_MOUSE_MOVEMENT_INTERVALL; // [ms]
-    const unsigned int UPLOAD_TIMES_TIME = 60 * NO_MOUSE_MOVEMENT_INTERVALL; // [ms]
+    const unsigned int UPLOAD_TIMES_TIME = 2/*60todo remove*/ * NO_MOUSE_MOVEMENT_INTERVALL; // [ms]
     const unsigned int CHECK4NEW_DAY_INTERVALL = 60 * 1000; // [ms]
     const unsigned int FLASH_INTERVALL = 750; // [ms]
     const unsigned int MAX_FLASH_TIMES = 13; // How long should output text be visible = MAX_FLASH_TIMES * FLASH_INTERVALL

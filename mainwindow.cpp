@@ -2,13 +2,12 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// If there is 5 minute no mouse movement update libreOffice infos: writeBufferedTimes2database should return if failed or not and should not clear the list if failed
-// If there is 5 minute no mouse movement also sync again with database
-// Logout employee if there a 10 seconds no mouse input (Just remove displayed informations) -> Failed to catch mouse events on mac!
+// If there is 5 minute no mouse movement sync with database
+// If a new day start just restart the pi?
 // If new libreOfficeSheet is created, logout user and reinit all data
 // Check how many people i can display on my tv screen
 // Look at later:
-// Time should saved with seconds in excel (also consider seconds in calculations)
+// void MainWindow::noMouseMovement() -> If data where wirte to database GUI is frozen!
 // Min. 50 employee buttons should be displayed on the left side. Maybe make a scrollbar
 // Scroll bar disapears if there are to much check in/out times added to model
 
@@ -266,14 +265,18 @@ void MainWindow::noMouseMovement()
 {
     ++noMouseMovementCounter;
 
-    if((noMouseMovementCounter * NO_MOUSE_MOVEMENT_INTERVALL) % INACTIVE_USER_TIME == 0)
+    if((noMouseMovementCounter * NO_MOUSE_MOVEMENT_INTERVALL) == INACTIVE_USER_TIME)
     {
-        // toDo checkout user here
+        ui->label_output->setText("");
+        unloadEmployee();
     }
 
-    if((noMouseMovementCounter * NO_MOUSE_MOVEMENT_INTERVALL) % UPLOAD_TIMES_TIME == 0)
+    if(((noMouseMovementCounter * NO_MOUSE_MOVEMENT_INTERVALL) % UPLOAD_TIMES_TIME) == 0)
     {
-        // toDo upload buffered times here
+        if(!list_bufferedTimes.isEmpty())
+        {
+            ExcelInterface::writeBufferedTimes2database(&list_bufferedTimes);
+        }
     }
 
     // toDo sync with database
