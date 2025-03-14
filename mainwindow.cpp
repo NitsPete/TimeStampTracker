@@ -2,10 +2,12 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Check how many people i can display on my tv screen
-// Look at later:
+// Es kan wohl passieren das wenn die Liste offen ist ich keine Mitarbeiter lesen kann. Dort eine Liste zwischen buffern und nur wenn diese ungleich null ist, dann initialisieren
+// Nochmal checken was beim new day alles passiert, werden leute automatisch ausgecheckt? -> Muss ja fast da neues Sheet
+// Wie kann das Initialisieren eine Fehlermeldung schmeißen, dass datei offen ist wenn es doch read only ist? Nur Fehler wenn neues Sheet erzeugt werden soll.
+// Täglich ein backup machen vom Libre office file (Speicherplatz vorher checken)(Ringpuffer oder so etwas in der Art machen)
+// Fehlermeldungen per email an tim schicken (email unsicher machen, kein google mail)
 // void MainWindow::noMouseMovement() -> If data where wirte to database GUI is frozen!
-// Min. 50 employee buttons should be displayed on the left side. Maybe make a scrollbar
 // Scroll bar disapears if there are to much check in/out times added to model
 
 MainWindow::MainWindow(QWidget *parent)
@@ -62,9 +64,9 @@ void MainWindow::updateTextSize()
     setTextSize(ui->label_time, 4);
     setTextSize(ui->label_date, 4);
 
-    setTextSize(ui->label_day, 1);
+    setTextSize(ui->label_day, 2);
     setTextSize(ui->label_timeDay, 1);
-    setTextSize(ui->label_season, 1);
+    setTextSize(ui->label_season, 2);
     setTextSize(ui->label_timeSeason, 1);
 
     setTextSize(ui->label_output, 4);
@@ -182,15 +184,32 @@ void MainWindow::initEmployeeList()
         }
         delete item;
     }
+    while(QLayoutItem *item = ui->verticalLayout_mainRight->takeAt(0))
+    {
+        if(QWidget *widget = item->widget())
+        {
+            widget->deleteLater();
+        }
+        delete item;
+    }
 
+    int i = 0;
     for(Employee &employee : list_employee)
     {
         QPushButton *tmpButton = new QPushButton(employee.getButtonText());
         connect(tmpButton, &QPushButton::clicked, this, [this, tmpButton]()
         {pushButton_employee_clicked(tmpButton->text());});
-        ui->verticalLayout_mainLeft->addWidget(tmpButton);
+
+        if(i % 2 == 0)
+        {
+            ui->verticalLayout_mainLeft->addWidget(tmpButton);
+        }else
+        {
+            ui->verticalLayout_mainRight->addWidget(tmpButton);
+        }
 
         setPushButtonEmployeeColor(&employee);
+        ++i;
     }
 }
 
@@ -199,6 +218,27 @@ void MainWindow::setPushButtonEmployeeColor(Employee *employee)
     for(int i = 0; i < ui->verticalLayout_mainLeft->count(); ++i)
     {
         QWidget *widget = ui->verticalLayout_mainLeft->itemAt(i)->widget();
+
+        if (QPushButton *button = qobject_cast<QPushButton*>(widget))
+        {
+            if(button->text().startsWith(QString::number(employee->getUniqueId()) + ":"))
+            {
+                if(employee->employeeIsCheckedIn())
+                {
+                    button->setStyleSheet(BUTTON_COLOR_RED);
+                    return;
+                }else
+                {
+                    button->setStyleSheet(BUTTON_COLOR_GREEN);
+                    return;
+                }
+            }
+        }
+    }
+
+    for(int i = 0; i < ui->verticalLayout_mainRight->count(); ++i)
+    {
+        QWidget *widget = ui->verticalLayout_mainRight->itemAt(i)->widget();
 
         if (QPushButton *button = qobject_cast<QPushButton*>(widget))
         {
