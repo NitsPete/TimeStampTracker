@@ -2,11 +2,10 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Nochmal checken was beim new day alles passiert, werden leute automatisch ausgecheckt? -> Muss ja fast da neues Sheet
-// Wie kann das Initialisieren eine Fehlermeldung schmeißen, dass datei offen ist wenn es doch read only ist? Nur Fehler wenn neues Sheet erzeugt werden soll.
-// Täglich ein backup machen vom Libre office file (Speicherplatz vorher checken)(Ringpuffer oder so etwas in der Art machen)
-// Fehlermeldungen per email an tim schicken (email unsicher machen, kein google mail)
-// void MainWindow::noMouseMovement() -> If data where wirte to database GUI is frozen!
+// Write errors per mail -> maybe better use a unsafe mail without 2 factor
+// Daily send a backup per mail
+// check4newDay() -> list_bufferedTimes should be empty or a email should be send!
+// void MainWindow::noMouseMovement() -> If data where write to database GUI is frozen!
 // Scroll bar disapears if there are to much check in/out times added to model
 
 MainWindow::MainWindow(QWidget *parent)
@@ -490,6 +489,7 @@ void MainWindow::check4newDay()
     {
         lastCheckedDate = currentDate;
         initLibreOfficeSheet();
+        initEmployeeList();
     }
 }
 
