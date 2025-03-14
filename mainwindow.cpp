@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Es kan wohl passieren das wenn die Liste offen ist ich keine Mitarbeiter lesen kann. Dort eine Liste zwischen buffern und nur wenn diese ungleich null ist, dann initialisieren
 // Nochmal checken was beim new day alles passiert, werden leute automatisch ausgecheckt? -> Muss ja fast da neues Sheet
 // Wie kann das Initialisieren eine Fehlermeldung schmeißen, dass datei offen ist wenn es doch read only ist? Nur Fehler wenn neues Sheet erzeugt werden soll.
 // Täglich ein backup machen vom Libre office file (Speicherplatz vorher checken)(Ringpuffer oder so etwas in der Art machen)
@@ -174,7 +173,15 @@ void MainWindow::initDateTimeLabel()
 
 void MainWindow::initEmployeeList()
 {
-    list_employee = ExcelInterface::getList_employee();
+    QList<Employee> tmpList = ExcelInterface::getList_employee();
+
+    // If databank is saved from outside while trying to init employee list
+    if(tmpList.isEmpty())
+    {
+        return;
+    }
+
+    list_employee = tmpList;
 
     while(QLayoutItem *item = ui->verticalLayout_mainLeft->takeAt(0))
     {
