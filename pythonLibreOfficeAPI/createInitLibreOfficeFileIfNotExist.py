@@ -7,7 +7,9 @@ from datetime import datetime
 from com.sun.star.task import ErrorCodeIOException
 
 from constants import *
+from functionLogger import log_function
 
+@log_function
 def connect2libreOffice():
     local_context = uno.getComponentContext()
     resolver = local_context.ServiceManager.createInstanceWithContext(
@@ -16,6 +18,7 @@ def connect2libreOffice():
     context = resolver.resolve("uno:socket,host=localhost,port=2002;urp;StarOffice.ComponentContext")
     return context
 
+@log_function
 def openDocument(path: Path):
     context = connect2libreOffice()
     desktop = context.ServiceManager.createInstanceWithContext(
@@ -36,6 +39,7 @@ def getCellPosition(column, row):
 
     return f"{strColumn}{strRow}"
 
+@log_function
 def addHeaderRow(sheet):
     headerName = sheet.getCellByPosition(COLUMN_NAME, 0)
     sheet.Columns.getByIndex(0).OptimalWidth = True
@@ -104,7 +108,7 @@ def addCellFormat(sheet, document):
         cellTimeDay = sheet.getCellByPosition(COLUMN_TIME_DAY, rowNumber)
         cellTimeDay.NumberFormat = formatKey
 
-
+@log_function
 def initDocument(document):
     sheets = document.Sheets
     sheet = sheets.getByIndex(0) 
@@ -121,7 +125,8 @@ def initDocument(document):
     for i in range(0, MAX_COLUMNS):
         sheet.Columns.getByIndex(i).OptimalWidth = True
 
-def main(): 
+@log_function
+def main_createInitLibreOfficeFileIfNotExist(): 
     argc = len(sys.argv)
     if argc != 2:
         print("Wrong parameter count!")
@@ -153,4 +158,4 @@ def main():
 
     document.close(True)
 
-main()
+main_createInitLibreOfficeFileIfNotExist()

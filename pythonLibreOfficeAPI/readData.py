@@ -4,7 +4,9 @@ from pathlib import Path
 from com.sun.star.task import ErrorCodeIOException
 
 from constants import *
+from functionLogger import log_function
 
+@log_function
 def connect2libreOffice():
     local_context = uno.getComponentContext()
     resolver = local_context.ServiceManager.createInstanceWithContext(
@@ -13,6 +15,7 @@ def connect2libreOffice():
     context = resolver.resolve("uno:socket,host=localhost,port=2002;urp;StarOffice.ComponentContext")
     return context
 
+@log_function
 def openDocument(path: Path):
     context = connect2libreOffice()
     desktop = context.ServiceManager.createInstanceWithContext(
@@ -22,6 +25,7 @@ def openDocument(path: Path):
     document = desktop.loadComponentFromURL(file_url, "_blank", 0, ())
     return document
 
+@log_function
 def getSheetData(document):
     sheets = document.Sheets
     sheet = sheets.getByIndex(0)  # Sheet 0 is always the newest sheet
@@ -42,7 +46,8 @@ def getSheetData(document):
             print(cell.getString())
         print("\r") # Indicates end of employee infos (This value is print as "\r\n")
 
-def main(): 
+@log_function
+def main_readData(): 
     argc = len(sys.argv)
     if argc != 2:
         print("Wrong parameter count!")
@@ -56,4 +61,4 @@ def main():
 
     document.close(True)
 
-main()
+main_readData()

@@ -184,6 +184,8 @@ BufferedTime ExcelInterface::addTime(Employee *employee, eCheckTime checkTime, Q
 
 void ExcelInterface::writeBufferedTimes2database(QList<BufferedTime> *list_bufferedTimes)
 {
+    LOG_FUNCTION();
+
     if(list_bufferedTimes->isEmpty())
     {
         return;
@@ -203,6 +205,12 @@ void ExcelInterface::writeBufferedTimes2database(QList<BufferedTime> *list_buffe
 
     if(returnVal == SUCCESS)
     {
+        FunctionLogger::writeLog(LOGGING_PATH, "    SUCCESS");
+
         list_bufferedTimes->clear();
+    }
+    else
+    {
+        FunctionLogger::writeLog(LOGGING_PATH, "    NO SUCCESS");
     }
 }

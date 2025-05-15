@@ -11,12 +11,14 @@ CONFIG += c++17
 SOURCES += \
     employee.cpp \
     excelinterface.cpp \
+    functionlogger.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     employee.h \
     excelinterface.h \
+    functionlogger.h \
     mainwindow.h
 
 FORMS += \

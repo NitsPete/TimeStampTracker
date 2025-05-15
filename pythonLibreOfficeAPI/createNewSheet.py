@@ -5,7 +5,9 @@ from datetime import datetime
 from com.sun.star.task import ErrorCodeIOException
 
 from constants import *
+from functionLogger import log_function
 
+@log_function
 def connect2libreOffice():
     local_context = uno.getComponentContext()
     resolver = local_context.ServiceManager.createInstanceWithContext(
@@ -14,6 +16,7 @@ def connect2libreOffice():
     context = resolver.resolve("uno:socket,host=localhost,port=2002;urp;StarOffice.ComponentContext")
     return context
 
+@log_function
 def openDocument(path: Path):
     context = connect2libreOffice()
     desktop = context.ServiceManager.createInstanceWithContext(
@@ -34,6 +37,7 @@ def getCellPosition(column, row):
 
     return f"{strColumn}{strRow}"
 
+@log_function
 def copySheetData(document):
     sheets = document.Sheets
     
@@ -96,8 +100,8 @@ def copySheetData(document):
         if columnNumber == (MAX_COLUMNS-1):
             newSheet.Columns.getByIndex(COLUMN_NAME).OptimalWidth = True
 
-
-def main(): 
+@log_function
+def main_createNewSheet(): 
     argc = len(sys.argv)
     if argc != 2:
         print("Wrong parameter count!")
@@ -118,4 +122,4 @@ def main():
 
     document.close(True)
 
-main()
+main_createNewSheet()

@@ -12,10 +12,10 @@
 #include <QMouseEvent>
 #include <thread>
 #include <chrono>
-
 #include <QDebug>
 
 #include "excelinterface.h"
+#include "functionlogger.h"
 
 
 QT_BEGIN_NAMESPACE

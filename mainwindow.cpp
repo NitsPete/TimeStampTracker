@@ -2,11 +2,11 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Implement Logging
+// Autostart hinzufügen vom System
 // Daten in LibreOffice synchronisieren alle 60 Sekunden
+// Tim neue Version geben
 // Checken ob ein neuer Tag ist alle 100ms
 // Programm friert ein bei neuen Tag (Uhrzeit war 00:00:44)
-// Autostart hinzufügen vom System
 // Write errors per mail -> maybe better use a unsafe mail without 2 factor
 // Daily send a backup per mail
 // Anzeige machen ob times2Write liste leer ist oder nicht
@@ -23,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    LOG_FUNCTION();
+
     ui->setupUi(this);
 
     qApp->installEventFilter(this); // Need filter to catch mouse movement
@@ -56,6 +58,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    LOG_FUNCTION();
+
     if (libreOfficeServer->state() != QProcess::NotRunning)
     {
         libreOfficeServer->kill();
@@ -67,6 +71,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::updateTextSize()
 {
+    LOG_FUNCTION();
+
     setTextSize(ui->pushButton_come, 4);
     setTextSize(ui->pushButton_go, 4);
 
@@ -87,6 +93,8 @@ void MainWindow::updateTextSize()
 
 void MainWindow::setTextSize(QWidget *widget, unsigned int scaleFactor)
 {
+    LOG_FUNCTION();
+
     QFont font;
     font = widget->font();
     font.setPointSize(std::min(widget->width(), widget->height()) / scaleFactor);
@@ -95,6 +103,8 @@ void MainWindow::setTextSize(QWidget *widget, unsigned int scaleFactor)
 
 void MainWindow::initLibreOfficeServer()
 {
+    LOG_FUNCTION();
+
     QString libreOfficePath = "libreoffice";
     QStringList args;
     args << "--calc" << "--accept=socket,host=localhost,port=2002;urp;" << "--nologo" << "--headless" << "--invisible";
@@ -115,6 +125,8 @@ void MainWindow::initLibreOfficeServer()
 
 bool MainWindow::check4LibreOfficeServer()
 {
+    LOG_FUNCTION();
+
     static unsigned int count = 1;
     QProcess process;
     process.start("bash", QStringList() << "-c" << "telnet 127.0.0.1 2002");
@@ -137,6 +149,8 @@ bool MainWindow::check4LibreOfficeServer()
 
 void MainWindow::initLibreOfficeFile()
 {
+    LOG_FUNCTION();
+
     QStringList params;
     params << PATH_INIT_LIBRE_OFFICE_FILE
            << PATH_LIBREOFFICE_FILE;
@@ -152,6 +166,8 @@ void MainWindow::initLibreOfficeFile()
 
 void MainWindow::initLibreOfficeSheet()
 {
+    LOG_FUNCTION();
+
     QStringList params;
     params << PATH_INIT_LiBRE_OFFICE_SHEET
            << PATH_LIBREOFFICE_FILE;
@@ -168,6 +184,8 @@ void MainWindow::initLibreOfficeSheet()
 
 void MainWindow::initOutputLabel()
 {
+    LOG_FUNCTION();
+
     ui->label_output->clear();
 
     timer_flashOutputLabel = new QTimer(this);
@@ -176,6 +194,8 @@ void MainWindow::initOutputLabel()
 
 void MainWindow::initDateTimeLabel()
 {
+    LOG_FUNCTION();
+
     timer_updateDateTime = new QTimer(this);
     connect(timer_updateDateTime, &QTimer::timeout, this, &MainWindow::updateDateTime);
     timer_updateDateTime->start(1000); // ms
@@ -183,6 +203,8 @@ void MainWindow::initDateTimeLabel()
 
 void MainWindow::initEmployeeList()
 {
+    LOG_FUNCTION();
+
     QList<Employee> tmpList = ExcelInterface::getList_employee();
 
     // If databank is saved from outside while trying to init employee list
@@ -232,6 +254,9 @@ void MainWindow::initEmployeeList()
 
 void MainWindow::setPushButtonEmployeeColor(Employee *employee)
 {
+    // No logging because to much spam
+    //LOG_FUNCTION();
+
     for(int i = 0; i < ui->verticalLayout_mainLeft->count(); ++i)
     {
         QWidget *widget = ui->verticalLayout_mainLeft->itemAt(i)->widget();
@@ -277,6 +302,8 @@ void MainWindow::setPushButtonEmployeeColor(Employee *employee)
 
 void MainWindow::pushButton_come_clicked()
 {
+    LOG_FUNCTION();
+
     if(currentEmployee == nullptr)
     {
         qDebug() << "pushButton_come_clicked: nullptr exception!";
@@ -297,6 +324,8 @@ void MainWindow::pushButton_come_clicked()
 
 void MainWindow::pushButton_go_clicked()
 {
+    LOG_FUNCTION();
+
     if(currentEmployee == nullptr)
     {
         qDebug() << "pushButton_go_clicked: nullptr exception!";
@@ -321,19 +350,27 @@ void MainWindow::noMouseMovement()
 
     if((noMouseMovementCounter * NO_MOUSE_MOVEMENT_INTERVALL) == INACTIVE_USER_TIMEOUT_TIME)
     {
+        FunctionLogger::writeLog(LOGGING_PATH, "    INACTIVE_USER_TIMEOUT_TIME");
+
         ui->label_output->setText("");
         unloadEmployee();
     }
 
     if(((noMouseMovementCounter * NO_MOUSE_MOVEMENT_INTERVALL) % UPLOAD_AND_REINIT_INTERVALL) == 0)
     {
+        FunctionLogger::writeLog(LOGGING_PATH, "    UPLOAD_AND_REINIT_INTERVALL");
+
         if(!list_bufferedTimes.isEmpty())
         {
+            FunctionLogger::writeLog(LOGGING_PATH, "    !list_bufferedTimes.isEmpty()");
+
             ExcelInterface::writeBufferedTimes2database(&list_bufferedTimes);
         }
 
         if(list_bufferedTimes.isEmpty())
         {
+            FunctionLogger::writeLog(LOGGING_PATH, "    list_bufferedTimes.isEmpty()");
+
             initEmployeeList();
         }
     }
@@ -341,6 +378,8 @@ void MainWindow::noMouseMovement()
 
 void MainWindow::loadEmployee(Employee *employee)
 {
+    LOG_FUNCTION();
+
     if(employee == nullptr)
     {
         qDebug() << "loadEmployee: nullptr exception!";
@@ -374,6 +413,8 @@ void MainWindow::loadEmployee(Employee *employee)
 
 void MainWindow::loadTableView(Employee *employee)
 {
+    LOG_FUNCTION();
+
     unsigned int extraSpace;
     (!employee->getAllowed2CheckIn() && !employee->getBossSetsMorningTime()) ? extraSpace = 1 : extraSpace = 0;
     unsigned int columns = qMax((unsigned int)(employee->getList_checkInToday().length()+extraSpace), (unsigned int)employee->getList_checkOutToday().length());
@@ -444,6 +485,8 @@ void MainWindow::loadTableView(Employee *employee)
 
 void MainWindow::unloadEmployee()
 {
+    LOG_FUNCTION();
+
     ui->pushButton_come->setEnabled(false);
     ui->pushButton_go->setEnabled(false);
 
@@ -458,6 +501,8 @@ void MainWindow::unloadEmployee()
 
 void MainWindow::stopTimer_flashOutputLabel()
 {
+    LOG_FUNCTION();
+
     timer_flashOutputLabel->stop();
     currentFlashCounter = 0;
     ui->label_output->clear();
@@ -465,6 +510,8 @@ void MainWindow::stopTimer_flashOutputLabel()
 
 void MainWindow::updateOutputLabelFlash()
 {
+    LOG_FUNCTION();
+
     if(currentFlashCounter >= MAX_FLASH_TIMES)
     {
         stopTimer_flashOutputLabel();
@@ -498,6 +545,8 @@ void MainWindow::check4newDay()
     QDate currentDate = QDate::currentDate();
     if(lastCheckedDate != currentDate)
     {
+        LOG_FUNCTION();
+
         lastCheckedDate = currentDate;
         initLibreOfficeSheet();
         initEmployeeList();
@@ -506,6 +555,8 @@ void MainWindow::check4newDay()
 
 void MainWindow::pushButton_employee_clicked(const QString &buttonText)
 {
+    LOG_FUNCTION();
+
     stopTimer_flashOutputLabel();
 
     unsigned int uniqueId = buttonText.split(":").first().toUInt();

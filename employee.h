@@ -4,8 +4,9 @@
 #include <QStringList>
 #include <QTime>
 #include <QLocale>
-
 #include <QDebug>
+
+#include "functionlogger.h"
 
 class Employee
 {
