@@ -17,6 +17,7 @@
 
 #include "excelinterface.h"
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -50,6 +51,7 @@ protected:
 
 private:
     Ui::MainWindow *ui;
+
     QProcess *libreOfficeServer;
     QTimer *timer_noMouseMovement;
     QTimer *timer_updateDateTime;
@@ -63,7 +65,7 @@ private:
 
     const unsigned int NO_MOUSE_MOVEMENT_INTERVALL = 5 * 1000; // [ms] Value must be less than blow values
     const unsigned int INACTIVE_USER_TIMEOUT_TIME = 2 * NO_MOUSE_MOVEMENT_INTERVALL; // [ms]
-    const unsigned int UPLOAD_AND_REINIT_INTERVALL = 12 * NO_MOUSE_MOVEMENT_INTERVALL; // [ms]
+    const unsigned int UPLOAD_AND_REINIT_INTERVALL = 3 * NO_MOUSE_MOVEMENT_INTERVALL; // [ms]
 
     const unsigned int CHECK4NEW_DAY_INTERVALL = 60 * 1000; // [ms]
     const unsigned int FLASH_INTERVALL = 750; // [ms]

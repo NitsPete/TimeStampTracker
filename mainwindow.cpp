@@ -2,9 +2,20 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
+// Implement Logging
+// Daten in LibreOffice synchronisieren alle 60 Sekunden
+// Checken ob ein neuer Tag ist alle 100ms
+// Programm friert ein bei neuen Tag (Uhrzeit war 00:00:44)
+// Autostart hinzufügen vom System
 // Write errors per mail -> maybe better use a unsafe mail without 2 factor
 // Daily send a backup per mail
+// Anzeige machen ob times2Write liste leer ist oder nicht
+// Mitarbeiter solllen im nachhinein geordnet werden können. Dies soll passieren durch eine Zahl vor jedem Namen. Dann anch Weißen und nicht weißen hintergrund bei erstellung eines sheets sortieren. Liste der Mitarbeiter soll nach ihrer uID sortiert werden.
+// Wenn keine zeiten in der Zeiten liste sind dann nach einer Minute auch die Daten von LibreOffice ziehen
 // check4newDay() -> list_bufferedTimes should be empty or a email should be send!
+// Regex hinzufügen in libreoffice file
+// Zeiten sollen maximal 24:00:00 enthalten können. Wenn Uhrzeiten ohne drücken von "Command" nach unten gezogen werden wird immer +24 addiert. Dieser Fehler kann so abgefangen werden!
+// Schreibschutz hinzufügen in libreoffice file
 // void MainWindow::noMouseMovement() -> If data where write to database GUI is frozen!
 // Scroll bar disapears if there are to much check in/out times added to model
 

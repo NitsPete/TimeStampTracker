@@ -26,7 +26,7 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QGridLayout" name="gridLayout" columnstretch="1,4,1,0,0">
+   <layout class="QGridLayout" name="gridLayout" columnstretch="1,4,1">
     <item row="0" column="1">
      <layout class="QVBoxLayout" name="verticalLayout_mainMiddle" stretch="2,1,0,2">
       <item>
