@@ -68,6 +68,7 @@ private:
     const unsigned int UPLOAD_AND_REINIT_INTERVALL = 3 * NO_MOUSE_MOVEMENT_INTERVALL; // [ms]
 
     const unsigned int CHECK4NEW_DAY_INTERVALL = 60 * 1000; // [ms]
+    const unsigned int CHECK4NEW_TIME = 1000; // [ms]
     const unsigned int FLASH_INTERVALL = 750; // [ms]
     const unsigned int MAX_FLASH_TIMES = 13; // How long should output text be visible = MAX_FLASH_TIMES * FLASH_INTERVALL
     unsigned int noMouseMovementCounter = 0;
@@ -86,6 +87,7 @@ private:
     void initLibreOfficeSheet();
     void initOutputLabel();
     void initDateTimeLabel();
+    void initSavedDataLabel();
     void initEmployeeList();
     void setPushButtonEmployeeColor(Employee *employee);
 

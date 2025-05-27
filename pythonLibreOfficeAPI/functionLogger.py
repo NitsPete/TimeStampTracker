@@ -4,7 +4,8 @@ import functools
 from datetime import datetime
 from threading import Lock
 
-LOGGING_PATH = '../..'
+LOGGING_PATH = '/home/admin/SharedFolder'
+
 LOGGING_FILENAME = 'logPython.txt'
 
 log_file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), LOGGING_PATH, LOGGING_FILENAME))

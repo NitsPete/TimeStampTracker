@@ -6,7 +6,7 @@
 // Enable/Disable logging
 const bool ENABLE_LOGGING = true;
 
-const QString LOGGING_PATH = "../logCpp.txt";
+const QString LOGGING_PATH = "/home/admin/SharedFolder//logCpp.txt";
 
 // Add this define to start of a function to log entry and exit
 #define LOG_FUNCTION() FunctionLogger functionLogger(LOGGING_PATH, Q_FUNC_INFO);

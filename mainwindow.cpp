@@ -9,7 +9,6 @@
 // Programm friert ein bei neuen Tag (Uhrzeit war 00:00:44)
 // Write errors per mail -> maybe better use a unsafe mail without 2 factor
 // Daily send a backup per mail
-// Anzeige machen ob times2Write liste leer ist oder nicht
 // Mitarbeiter solllen im nachhinein geordnet werden können. Dies soll passieren durch eine Zahl vor jedem Namen. Dann anch Weißen und nicht weißen hintergrund bei erstellung eines sheets sortieren. Liste der Mitarbeiter soll nach ihrer uID sortiert werden.
 // Wenn keine zeiten in der Zeiten liste sind dann nach einer Minute auch die Daten von LibreOffice ziehen
 // check4newDay() -> list_bufferedTimes should be empty or a email should be send!
@@ -86,9 +85,12 @@ void MainWindow::updateTextSize()
 
     setTextSize(ui->label_output, 4);
 
-    int iconSize = ui->label_time->font().pointSize();
-    ui->label_timeIcon->setFixedSize(iconSize, iconSize);
-    ui->label_dateIcon->setFixedSize(iconSize, iconSize);
+    int iconSizeSavedData = 2 * ui->label_output->font().pointSize();
+    ui->label_savedDataIcon->setFixedSize(iconSizeSavedData, iconSizeSavedData);
+
+    int iconSizeDateTime = ui->label_time->font().pointSize();
+    ui->label_timeIcon->setFixedSize(iconSizeDateTime, iconSizeDateTime);
+    ui->label_dateIcon->setFixedSize(iconSizeDateTime, iconSizeDateTime);
 }
 
 void MainWindow::setTextSize(QWidget *widget, unsigned int scaleFactor)
@@ -198,7 +200,7 @@ void MainWindow::initDateTimeLabel()
 
     timer_updateDateTime = new QTimer(this);
     connect(timer_updateDateTime, &QTimer::timeout, this, &MainWindow::updateDateTime);
-    timer_updateDateTime->start(1000); // ms
+    timer_updateDateTime->start(CHECK4NEW_TIME); // ms
 }
 
 void MainWindow::initEmployeeList()
@@ -311,6 +313,7 @@ void MainWindow::pushButton_come_clicked()
     }
 
     list_bufferedTimes.append(ExcelInterface::addCheckInTime(currentEmployee, QTime::currentTime()));
+    ui->label_savedDataIcon->setPixmap(QPixmap(":/images/dataUnsaved.png"));
     setPushButtonEmployeeColor(currentEmployee);
 
     flashOutputLabel = false;
@@ -333,6 +336,7 @@ void MainWindow::pushButton_go_clicked()
     }
 
     list_bufferedTimes.append(ExcelInterface::addCheckOutTime(currentEmployee, QTime::currentTime()));
+    ui->label_savedDataIcon->setPixmap(QPixmap(":/images/dataUnsaved.png"));
     setPushButtonEmployeeColor(currentEmployee);
 
     flashOutputLabel = false;
@@ -370,6 +374,8 @@ void MainWindow::noMouseMovement()
         if(list_bufferedTimes.isEmpty())
         {
             FunctionLogger::writeLog(LOGGING_PATH, "    list_bufferedTimes.isEmpty()");
+
+            ui->label_savedDataIcon->setPixmap(QPixmap(":/images/dataSaved.png"));
 
             initEmployeeList();
         }

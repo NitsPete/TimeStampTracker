@@ -3,5 +3,7 @@
         <file>images/mouse-cursor.png</file>
         <file>images/calendar.png</file>
         <file>images/clock.png</file>
+        <file>images/dataUnsaved.png</file>
+        <file>images/dataSaved.png</file>
     </qresource>
 </RCC>
