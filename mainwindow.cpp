@@ -2,31 +2,19 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Lösung:
-// Zwei Knöpfe machen: Eine Starten den Libre office server und einer schließt ihn. Schauen was im Terminal Passiert
-// Den Libre Office Server jeden Tag neu starten, glaube die fcn initlibreoffice sheet hat beim neuen server keine verbindung mehr.
-// Vllt ist es leichter das programm in den autostart zu packen und den raspberry pi jeden tag neu zu starten (Dann kann ich beim Aufhängen den Server aber nicht neu starten)
-// als nächsten noch die python scripte anpassen das diese nicht ewig zeit haben. z.b. mit einen waitforFinished setzten und falls das nicht geht den libre office server neu starten oder notfalls dann auch den pi neu starten
-// Problem ist beim zweiten mal wird der server nicht mehr gestartet obwhol die wait4 fcn durch läuft (sieht man in der ps liste im terminal)
-//      Nach UPLOAD_AND_REINIT_INTERVAL mitt leere buffered list hängt sich das python script in getSheetData auf (Freezed)
-//          Die Funktion sollte in einen Try and Catch block gepackt werdne. Wenn eine Exception geworfen wird, dann controlliert abbrechen Kurz warten und nochmal versuchen
-//          Mal die ganze funtkion in chatgpt hauen und fragen wo es abstürzen kann und schauen ob bei absturz die GUI einfrien könnte
-//          Auch bedenken das ich eine Maximale Zeit für den Python Prozess setzten kann. Eventuell bei maximaler zeit abbrechen und nochmal versuchen im QT Code!!
-// Check4new day auf 0.1s setzten
+// Lösung Absturz:
+//      Bei allen python scripten ein wait for finished einfügen und wenn es zu lange dauert 
+//      soll der libreoffice server neu gestartet werden und das script erneut aufgerufen werden
 // Autostart hinzufügen vom System
-// Daten in LibreOffice synchronisieren alle 60 Sekunden
-// Tim neue Version geben
-// Checken ob ein neuer Tag ist alle 100ms
-// Programm friert ein bei neuen Tag (Uhrzeit war 00:00:44)
-// Write errors per mail -> maybe better use a unsafe mail without 2 factor
+// Write errors per mail -> maybe better use a unsafe mail without 2 factor (Am besten ein Python script schreiben)
 // Daily send a backup per mail
 // Mitarbeiter solllen im nachhinein geordnet werden können. Dies soll passieren durch eine Zahl vor jedem Namen. Dann anch Weißen und nicht weißen hintergrund bei erstellung eines sheets sortieren. Liste der Mitarbeiter soll nach ihrer uID sortiert werden.
 // Wenn keine zeiten in der Zeiten liste sind dann nach einer Minute auch die Daten von LibreOffice ziehen
 // check4newDay() -> list_bufferedTimes should be empty or a email should be send!
 // Regex hinzufügen in libreoffice file
 // Zeiten sollen maximal 24:00:00 enthalten können. Wenn Uhrzeiten ohne drücken von "Command" nach unten gezogen werden wird immer +24 addiert. Dieser Fehler kann so abgefangen werden!
-// Schreibschutz hinzufügen in libreoffice file
-// void MainWindow::noMouseMovement() -> If data where write to database GUI is frozen!
+// Schreibschutz hinzufügen in libreoffice file (Das Nur bestimmte Zellen vom Tim beschrieben werden können)
+// void MainWindow::noMouseMovement() -> If data where write to database GUI is frozen! -> Ein lade Fenster Einfügen (Gibt es schon fertig)
 // Spalte C hat falsche größe manchmal. Schauen ob diese Größe Automatisch angepasst wird im python script!
 // Scroll bar disapears if there are to much check in/out times added to model
 
@@ -43,8 +31,8 @@ MainWindow::MainWindow(QWidget *parent)
     // Should be init before initLibreOfficeServer() or restartLibreOfficeServer()
     libreOfficeServer = new QProcess();
 
-    /* ToDo Remove
     restartLibreOfficeServer();
+
     initLibreOfficeFile();
     initLibreOfficeSheet();
 
@@ -69,7 +57,6 @@ MainWindow::MainWindow(QWidget *parent)
     initDateTimeLabel();
 
     initEmployeeList();
-    */
 }
 
 MainWindow::~MainWindow()
@@ -155,17 +142,13 @@ void MainWindow::check4LibreOfficeServer() // toDo das muss kein bool mehr sein
 {
     LOG_FUNCTION();
 
-    // toDo schön machen und schauen ob ich den timer überhaupt brauche
-    QElapsedTimer timer;
-    timer.start(); int a = 0;
+    int a = 0;
     while(isPortFree("127.0.0.1", 2002))
     {
-
         qDebug() << "Wait for LibreOffice-Server: " << a;
         ++a;
         QThread::msleep(900);
     }
-qDebug() << "Check durch";
 }
 
 void MainWindow::restartLibreOfficeServer()
@@ -174,17 +157,18 @@ void MainWindow::restartLibreOfficeServer()
 
     QProcess::execute("pkill", QStringList() << "-f" << "soffice.bin"); // Kill LibreOffice-Server
 
-    // toDo schön schreiben und schauen ob ich den timer elapsed überhaupt brauche
-    QElapsedTimer timer;
-    timer.start(); int a = 0;
-    while(!isPortFree("127.0.0.1", 2002) && timer.elapsed() < 3000)
+    int a = 0;
+    while(!isPortFree("127.0.0.1", 2002))
     {
 
         qDebug() << "Wait to destroy LibreOffice-Server: " << a;
         ++a;
-        QThread::msleep(200);
+        QThread::msleep(300);
     }
 
+
+    delete libreOfficeServer;
+    libreOfficeServer = new QProcess(this);
 
     initLibreOfficeServer();
 }
@@ -589,8 +573,7 @@ void MainWindow::updateDateTime()
 void MainWindow::check4newDay()
 {
     QDate currentDate = QDate::currentDate();
-    //if(lastCheckedDate != currentDate) //toDo remove
-    if(true)
+    if(lastCheckedDate != currentDate)
     {
         LOG_FUNCTION();
 

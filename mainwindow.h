@@ -66,11 +66,11 @@ private:
     const QString BUTTON_COLOR_RED = "QPushButton { color: white; background-color: red; border: none; }";
     const QString BUTTON_COLOR_GREEN = "QPushButton { color: white; background-color: green; border: none; }";
 
-    const unsigned int NO_MOUSE_MOVEMENT_INTERVALL = 5 * 1000; // [ms] Value must be less than blow values
+    const unsigned int NO_MOUSE_MOVEMENT_INTERVALL = 5 * 1000; // [ms] Value must be less than below values
     const unsigned int INACTIVE_USER_TIMEOUT_TIME = 2 * NO_MOUSE_MOVEMENT_INTERVALL; // [ms]
-    const unsigned int UPLOAD_AND_REINIT_INTERVALL = 3 * NO_MOUSE_MOVEMENT_INTERVALL; // [ms]
+    const unsigned int UPLOAD_AND_REINIT_INTERVALL = 12 * NO_MOUSE_MOVEMENT_INTERVALL; // [ms]
 
-    const unsigned int CHECK4NEW_DAY_INTERVALL = 60 * 1000; // [ms]
+    const unsigned int CHECK4NEW_DAY_INTERVALL = 100; // [ms]
     const unsigned int CHECK4NEW_TIME = 1000; // [ms]
     const unsigned int FLASH_INTERVALL = 750; // [ms]
     const unsigned int MAX_FLASH_TIMES = 13; // How long should output text be visible = MAX_FLASH_TIMES * FLASH_INTERVALL
