@@ -2,6 +2,17 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
+// Lösung:
+// Zwei Knöpfe machen: Eine Starten den Libre office server und einer schließt ihn. Schauen was im Terminal Passiert
+// Den Libre Office Server jeden Tag neu starten, glaube die fcn initlibreoffice sheet hat beim neuen server keine verbindung mehr.
+// Vllt ist es leichter das programm in den autostart zu packen und den raspberry pi jeden tag neu zu starten (Dann kann ich beim Aufhängen den Server aber nicht neu starten)
+// als nächsten noch die python scripte anpassen das diese nicht ewig zeit haben. z.b. mit einen waitforFinished setzten und falls das nicht geht den libre office server neu starten oder notfalls dann auch den pi neu starten
+// Problem ist beim zweiten mal wird der server nicht mehr gestartet obwhol die wait4 fcn durch läuft (sieht man in der ps liste im terminal)
+//      Nach UPLOAD_AND_REINIT_INTERVAL mitt leere buffered list hängt sich das python script in getSheetData auf (Freezed)
+//          Die Funktion sollte in einen Try and Catch block gepackt werdne. Wenn eine Exception geworfen wird, dann controlliert abbrechen Kurz warten und nochmal versuchen
+//          Mal die ganze funtkion in chatgpt hauen und fragen wo es abstürzen kann und schauen ob bei absturz die GUI einfrien könnte
+//          Auch bedenken das ich eine Maximale Zeit für den Python Prozess setzten kann. Eventuell bei maximaler zeit abbrechen und nochmal versuchen im QT Code!!
+// Check4new day auf 0.1s setzten
 // Autostart hinzufügen vom System
 // Daten in LibreOffice synchronisieren alle 60 Sekunden
 // Tim neue Version geben
@@ -16,6 +27,7 @@
 // Zeiten sollen maximal 24:00:00 enthalten können. Wenn Uhrzeiten ohne drücken von "Command" nach unten gezogen werden wird immer +24 addiert. Dieser Fehler kann so abgefangen werden!
 // Schreibschutz hinzufügen in libreoffice file
 // void MainWindow::noMouseMovement() -> If data where write to database GUI is frozen!
+// Spalte C hat falsche größe manchmal. Schauen ob diese Größe Automatisch angepasst wird im python script!
 // Scroll bar disapears if there are to much check in/out times added to model
 
 MainWindow::MainWindow(QWidget *parent)
@@ -28,7 +40,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     qApp->installEventFilter(this); // Need filter to catch mouse movement
 
-    initLibreOfficeServer();
+    // Should be init before initLibreOfficeServer() or restartLibreOfficeServer()
+    libreOfficeServer = new QProcess();
+
+    /* ToDo Remove
+    restartLibreOfficeServer();
     initLibreOfficeFile();
     initLibreOfficeSheet();
 
@@ -53,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent)
     initDateTimeLabel();
 
     initEmployeeList();
+    */
 }
 
 MainWindow::~MainWindow()
@@ -110,7 +127,7 @@ void MainWindow::initLibreOfficeServer()
     QString libreOfficePath = "libreoffice";
     QStringList args;
     args << "--calc" << "--accept=socket,host=localhost,port=2002;urp;" << "--nologo" << "--headless" << "--invisible";
-    libreOfficeServer = new QProcess();
+
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.remove("LD_LIBRARY_PATH"); // Make sure to finde lib libreglo.so
     libreOfficeServer->setProcessEnvironment(env);
@@ -122,31 +139,54 @@ void MainWindow::initLibreOfficeServer()
     }
 
     // Makes sure the server is online
-    while(!check4LibreOfficeServer());
+    check4LibreOfficeServer();
 }
 
-bool MainWindow::check4LibreOfficeServer()
+static bool isPortFree(const QString& host, quint16 port)
+{
+    QTcpSocket socket;
+    socket.connectToHost(host, port);
+    bool connected = socket.waitForConnected(100);
+    socket.abort();
+    return !connected;
+}
+
+void MainWindow::check4LibreOfficeServer() // toDo das muss kein bool mehr sein
 {
     LOG_FUNCTION();
 
-    static unsigned int count = 1;
-    QProcess process;
-    process.start("bash", QStringList() << "-c" << "telnet 127.0.0.1 2002");
-    process.waitForFinished(1000); // If connect to servr this will raise: "QProcess: Destroyed while process ("bash") is still running."
-
-    QString output = process.readAllStandardOutput();
-
-    if (output.contains("Connected"))
+    // toDo schön machen und schauen ob ich den timer überhaupt brauche
+    QElapsedTimer timer;
+    timer.start(); int a = 0;
+    while(isPortFree("127.0.0.1", 2002))
     {
-        qDebug() << "LibreOffice-Server is online!";
-        count = 1;
-        return true;
-    } else {
-        qDebug() << QString::number(count) << ": Wait for LibreOffice-Server!";
-        ++count;
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000)); // Wait 1 second
+
+        qDebug() << "Wait for LibreOffice-Server: " << a;
+        ++a;
+        QThread::msleep(900);
     }
-    return false;
+qDebug() << "Check durch";
+}
+
+void MainWindow::restartLibreOfficeServer()
+{
+    LOG_FUNCTION();
+
+    QProcess::execute("pkill", QStringList() << "-f" << "soffice.bin"); // Kill LibreOffice-Server
+
+    // toDo schön schreiben und schauen ob ich den timer elapsed überhaupt brauche
+    QElapsedTimer timer;
+    timer.start(); int a = 0;
+    while(!isPortFree("127.0.0.1", 2002) && timer.elapsed() < 3000)
+    {
+
+        qDebug() << "Wait to destroy LibreOffice-Server: " << a;
+        ++a;
+        QThread::msleep(200);
+    }
+
+
+    initLibreOfficeServer();
 }
 
 void MainWindow::initLibreOfficeFile()
@@ -549,11 +589,13 @@ void MainWindow::updateDateTime()
 void MainWindow::check4newDay()
 {
     QDate currentDate = QDate::currentDate();
-    if(lastCheckedDate != currentDate)
+    //if(lastCheckedDate != currentDate) //toDo remove
+    if(true)
     {
         LOG_FUNCTION();
 
         lastCheckedDate = currentDate;
+        restartLibreOfficeServer(); // Restart server because libre office is very unstable
         initLibreOfficeSheet();
         initEmployeeList();
     }
