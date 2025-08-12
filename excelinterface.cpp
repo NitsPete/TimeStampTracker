@@ -5,6 +5,70 @@ ExcelInterface::ExcelInterface()
 
 }
 
+static bool isPortFree(const QString& host, quint16 port)
+{
+    QTcpSocket socket;
+    socket.connectToHost(host, port);
+    bool connected = socket.waitForConnected(100);
+    socket.abort();
+    return !connected;
+}
+
+void check4LibreOfficeServer() // toDo das muss kein bool mehr sein
+{
+    LOG_FUNCTION();
+
+    int a = 0;
+    while(isPortFree("127.0.0.1", 2002))
+    {
+        qDebug() << "Wait for LibreOffice-Server: " << a;
+        ++a;
+        QThread::msleep(900);
+    }
+}
+
+void initLibreOfficeServer(QProcess *libreOfficeServer)
+{
+    LOG_FUNCTION();
+
+    QString libreOfficePath = "libreoffice";
+    QStringList args;
+    args << "--calc" << "--accept=socket,host=localhost,port=2002;urp;" << "--nologo" << "--headless" << "--invisible";
+
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.remove("LD_LIBRARY_PATH"); // Make sure to finde lib libreglo.so
+    libreOfficeServer->setProcessEnvironment(env);
+    libreOfficeServer->start(libreOfficePath, args);
+
+    if(!libreOfficeServer->waitForStarted())
+    {
+        QMessageBox::critical(nullptr, "Process start failed", "Unable to start LibreOffice-Server\nDatabase may not work!");
+    }
+
+    // Makes sure the server is online
+    check4LibreOfficeServer();
+}
+
+void ExcelInterface::restartLibreOfficeServer()
+{
+    LOG_FUNCTION();
+
+    QProcess::execute("pkill", QStringList() << "-f" << "soffice.bin"); // Kill LibreOffice-Server
+
+    int a = 0;
+    while(!isPortFree("127.0.0.1", 2002))
+    {
+
+        qDebug() << "Wait to destroy LibreOffice-Server: " << a;
+        ++a;
+        QThread::msleep(300);
+    }
+
+    QProcess *libreOfficeServer = new QProcess();
+
+    initLibreOfficeServer(libreOfficeServer);
+}
+
 PythonOutput ExcelInterface::runPythonProcess(QStringList params)
 {
     QProcess p;
@@ -14,7 +78,15 @@ PythonOutput ExcelInterface::runPythonProcess(QStringList params)
     p.setProcessEnvironment(env);
 
     p.start("python3", params);
-    p.waitForFinished(-1);
+    
+    // Restart libreOffice-Server if process freezed
+    if(!p.waitForFinished()) // Default value is 3000 ms
+    {
+        p.kill();
+        p.waitForFinished();
+        restartLibreOfficeServer();
+        p.start();
+    }
 
     PythonOutput pythonOutput;
     pythonOutput.returnVal = p.exitCode();

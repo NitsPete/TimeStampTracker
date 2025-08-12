@@ -4,6 +4,9 @@
 #include <QList>
 #include <QProcess>
 #include <QPair>
+#include <QMessageBox>
+#include <QThread>
+#include <QTcpSocket>
 #include <QDebug>
 
 #include "employee.h"
@@ -46,6 +49,7 @@ class ExcelInterface
 public:
     ExcelInterface();
 
+    static void restartLibreOfficeServer();
     static PythonOutput runPythonProcess(QStringList params); // QPair<ourput, errorOutput>
     static QList<Employee> getList_employee();
     static BufferedTime addCheckInTime(Employee *employee, QTime checkInTime);

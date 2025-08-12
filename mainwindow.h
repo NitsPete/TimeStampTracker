@@ -8,11 +8,8 @@
 #include <QStandardItemModel>
 #include <QScrollBar>
 #include <QProcess>
-#include <QMessageBox>
 #include <QMouseEvent>
 #include <QElapsedTimer>
-#include <QThread>
-#include <QTcpSocket>
 #include <thread>
 #include <chrono>
 #include <QDebug>
@@ -55,7 +52,6 @@ protected:
 private:
     Ui::MainWindow *ui;
 
-    QProcess *libreOfficeServer;
     QTimer *timer_noMouseMovement;
     QTimer *timer_updateDateTime;
     QTimer *timer_flashOutputLabel;
@@ -84,9 +80,6 @@ private:
     void updateTextSize();
     void setTextSize(QWidget *widget, unsigned int scaleFactor);
 
-    void initLibreOfficeServer();
-    void check4LibreOfficeServer();
-    void restartLibreOfficeServer();
     void initLibreOfficeFile();
     void initLibreOfficeSheet();
     void initOutputLabel();

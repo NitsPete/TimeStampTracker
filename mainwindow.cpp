@@ -2,9 +2,6 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Lösung Absturz:
-//      Bei allen python scripten ein wait for finished einfügen und wenn es zu lange dauert 
-//      soll der libreoffice server neu gestartet werden und das script erneut aufgerufen werden
 // Autostart hinzufügen vom System
 // Write errors per mail -> maybe better use a unsafe mail without 2 factor (Am besten ein Python script schreiben)
 // Daily send a backup per mail
@@ -28,10 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     qApp->installEventFilter(this); // Need filter to catch mouse movement
 
-    // Should be init before initLibreOfficeServer() or restartLibreOfficeServer()
-    libreOfficeServer = new QProcess();
-
-    restartLibreOfficeServer();
+    ExcelInterface::restartLibreOfficeServer();
 
     initLibreOfficeFile();
     initLibreOfficeSheet();
@@ -62,12 +56,6 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     LOG_FUNCTION();
-
-    if (libreOfficeServer->state() != QProcess::NotRunning)
-    {
-        libreOfficeServer->kill();
-        libreOfficeServer->waitForFinished();
-    }
 
     delete ui;
 }
@@ -105,72 +93,6 @@ void MainWindow::setTextSize(QWidget *widget, unsigned int scaleFactor)
     font = widget->font();
     font.setPointSize(std::min(widget->width(), widget->height()) / scaleFactor);
     widget->setFont(font);
-}
-
-void MainWindow::initLibreOfficeServer()
-{
-    LOG_FUNCTION();
-
-    QString libreOfficePath = "libreoffice";
-    QStringList args;
-    args << "--calc" << "--accept=socket,host=localhost,port=2002;urp;" << "--nologo" << "--headless" << "--invisible";
-
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    env.remove("LD_LIBRARY_PATH"); // Make sure to finde lib libreglo.so
-    libreOfficeServer->setProcessEnvironment(env);
-    libreOfficeServer->start(libreOfficePath, args);
-
-    if(!libreOfficeServer->waitForStarted())
-    {
-        QMessageBox::critical(this, "Process start failed", "Unable to start LibreOffice-Server\nDatabase may not work!");
-    }
-
-    // Makes sure the server is online
-    check4LibreOfficeServer();
-}
-
-static bool isPortFree(const QString& host, quint16 port)
-{
-    QTcpSocket socket;
-    socket.connectToHost(host, port);
-    bool connected = socket.waitForConnected(100);
-    socket.abort();
-    return !connected;
-}
-
-void MainWindow::check4LibreOfficeServer() // toDo das muss kein bool mehr sein
-{
-    LOG_FUNCTION();
-
-    int a = 0;
-    while(isPortFree("127.0.0.1", 2002))
-    {
-        qDebug() << "Wait for LibreOffice-Server: " << a;
-        ++a;
-        QThread::msleep(900);
-    }
-}
-
-void MainWindow::restartLibreOfficeServer()
-{
-    LOG_FUNCTION();
-
-    QProcess::execute("pkill", QStringList() << "-f" << "soffice.bin"); // Kill LibreOffice-Server
-
-    int a = 0;
-    while(!isPortFree("127.0.0.1", 2002))
-    {
-
-        qDebug() << "Wait to destroy LibreOffice-Server: " << a;
-        ++a;
-        QThread::msleep(300);
-    }
-
-
-    delete libreOfficeServer;
-    libreOfficeServer = new QProcess(this);
-
-    initLibreOfficeServer();
 }
 
 void MainWindow::initLibreOfficeFile()
@@ -578,7 +500,7 @@ void MainWindow::check4newDay()
         LOG_FUNCTION();
 
         lastCheckedDate = currentDate;
-        restartLibreOfficeServer(); // Restart server because libre office is very unstable
+        ExcelInterface::restartLibreOfficeServer(); // Restart server because libre office is very unstable
         initLibreOfficeSheet();
         initEmployeeList();
     }
