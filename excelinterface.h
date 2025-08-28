@@ -12,8 +12,7 @@
 #include "employee.h"
 #include "functionlogger.h"
 
-// toDo Add current Yeasr to Name
-static const QString PATH_LIBREOFFICE_FILE = "/home/admin/SharedFolder/2025Season.ods";
+static const QString LIBRE_OFFICE_FILENAME = "Zeitenliste.ods";
 
 // toDo Make path dynamic
 const QString PATH = "/home/admin/Desktop/TimeStampTracker/pythonLibreOfficeAPI/";
@@ -49,6 +48,7 @@ class ExcelInterface
 public:
     ExcelInterface();
 
+    static QString getPath2LibreOfficeFile();
     static void restartLibreOfficeServer();
     static PythonOutput runPythonProcess(QStringList params); // QPair<ourput, errorOutput>
     static QList<Employee> getList_employee();

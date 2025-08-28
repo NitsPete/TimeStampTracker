@@ -14,6 +14,7 @@
 // void MainWindow::noMouseMovement() -> If data where write to database GUI is frozen! -> Ein lade Fenster Einfügen (Gibt es schon fertig)
 // Spalte C hat falsche größe manchmal. Schauen ob diese Größe Automatisch angepasst wird im python script!
 // Scroll bar disapears if there are to much check in/out times added to model
+// Fix all toDo from code
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -101,7 +102,7 @@ void MainWindow::initLibreOfficeFile()
 
     QStringList params;
     params << PATH_INIT_LIBRE_OFFICE_FILE
-           << PATH_LIBREOFFICE_FILE;
+           << ExcelInterface::getPath2LibreOfficeFile();
 
     PythonOutput outputs = ExcelInterface::runPythonProcess(params);
     int returnVal = outputs.returnVal;
@@ -118,7 +119,7 @@ void MainWindow::initLibreOfficeSheet()
 
     QStringList params;
     params << PATH_INIT_LiBRE_OFFICE_SHEET
-           << PATH_LIBREOFFICE_FILE;
+           << ExcelInterface::getPath2LibreOfficeFile();
 
     PythonOutput outputs = ExcelInterface::runPythonProcess(params);
     int returnVal = outputs.returnVal;
@@ -300,7 +301,7 @@ void MainWindow::noMouseMovement()
 
     if((noMouseMovementCounter * NO_MOUSE_MOVEMENT_INTERVALL) == INACTIVE_USER_TIMEOUT_TIME)
     {
-        FunctionLogger::writeLog(LOGGING_PATH, "    INACTIVE_USER_TIMEOUT_TIME");
+        FunctionLogger::writeLog(FunctionLogger::getLoggingPath(), "    INACTIVE_USER_TIMEOUT_TIME");
 
         ui->label_output->setText("");
         unloadEmployee();
@@ -308,18 +309,18 @@ void MainWindow::noMouseMovement()
 
     if(((noMouseMovementCounter * NO_MOUSE_MOVEMENT_INTERVALL) % UPLOAD_AND_REINIT_INTERVALL) == 0)
     {
-        FunctionLogger::writeLog(LOGGING_PATH, "    UPLOAD_AND_REINIT_INTERVALL");
+        FunctionLogger::writeLog(FunctionLogger::getLoggingPath(), "    UPLOAD_AND_REINIT_INTERVALL");
 
         if(!list_bufferedTimes.isEmpty())
         {
-            FunctionLogger::writeLog(LOGGING_PATH, "    !list_bufferedTimes.isEmpty()");
+            FunctionLogger::writeLog(FunctionLogger::getLoggingPath(), "    !list_bufferedTimes.isEmpty()");
 
             ExcelInterface::writeBufferedTimes2database(&list_bufferedTimes);
         }
 
         if(list_bufferedTimes.isEmpty())
         {
-            FunctionLogger::writeLog(LOGGING_PATH, "    list_bufferedTimes.isEmpty()");
+            FunctionLogger::writeLog(FunctionLogger::getLoggingPath(), "    list_bufferedTimes.isEmpty()");
 
             ui->label_savedDataIcon->setPixmap(QPixmap(":/images/dataSaved.png"));
 

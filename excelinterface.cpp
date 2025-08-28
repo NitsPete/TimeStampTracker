@@ -5,6 +5,13 @@ ExcelInterface::ExcelInterface()
 
 }
 
+QString ExcelInterface::getPath2LibreOfficeFile()
+{
+     QString path = FunctionLogger::getPath() + LIBRE_OFFICE_FILENAME;
+
+    return path;
+}
+
 static bool isPortFree(const QString& host, quint16 port)
 {
     QTcpSocket socket;
@@ -14,7 +21,7 @@ static bool isPortFree(const QString& host, quint16 port)
     return !connected;
 }
 
-void check4LibreOfficeServer() // toDo das muss kein bool mehr sein
+void check4LibreOfficeServer()
 {
     LOG_FUNCTION();
 
@@ -25,6 +32,7 @@ void check4LibreOfficeServer() // toDo das muss kein bool mehr sein
         ++a;
         QThread::msleep(900);
     }
+    qDebug() << "LibreOffice-Server is online!";
 }
 
 void initLibreOfficeServer(QProcess *libreOfficeServer)
@@ -80,7 +88,7 @@ PythonOutput ExcelInterface::runPythonProcess(QStringList params)
     p.start("python3", params);
     
     // Restart libreOffice-Server if process freezed
-    if(!p.waitForFinished()) // Default value is 3000 ms
+    if(!p.waitForFinished(60 * 1000)) // [ms]
     {
         p.kill();
         p.waitForFinished();
@@ -111,7 +119,7 @@ QList<Employee> ExcelInterface::getList_employee()
 {
     QStringList params;
     params << PATH_GET_DATA;
-    params << PATH_LIBREOFFICE_FILE;
+    params << getPath2LibreOfficeFile();
 
     PythonOutput outputs = runPythonProcess(params);
     QString output = outputs.processOutput;
@@ -265,7 +273,7 @@ void ExcelInterface::writeBufferedTimes2database(QList<BufferedTime> *list_buffe
 
     QStringList params;
     params << PATH_WRITE_TIME
-           << PATH_LIBREOFFICE_FILE;
+           << getPath2LibreOfficeFile();
     for(BufferedTime bufferedTime : *list_bufferedTimes)
     {
         params << bufferedTime.uniqueId
@@ -277,12 +285,12 @@ void ExcelInterface::writeBufferedTimes2database(QList<BufferedTime> *list_buffe
 
     if(returnVal == SUCCESS)
     {
-        FunctionLogger::writeLog(LOGGING_PATH, "    SUCCESS");
+        FunctionLogger::writeLog(FunctionLogger::getLoggingPath(), "    SUCCESS");
 
         list_bufferedTimes->clear();
     }
     else
     {
-        FunctionLogger::writeLog(LOGGING_PATH, "    NO SUCCESS");
+        FunctionLogger::writeLog(FunctionLogger::getLoggingPath(), "    NO SUCCESS");
     }
 }

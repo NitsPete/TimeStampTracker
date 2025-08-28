@@ -1,5 +1,6 @@
 import sys
 import uno
+import os
 from pathlib import Path
 from datetime import datetime
 from com.sun.star.task import ErrorCodeIOException
@@ -108,6 +109,7 @@ def main_createNewSheet():
         return 
 
     path = Path(sys.argv[1])
+    os.makedirs(os.path.dirname(path), exist_ok=True)
 
     document = openDocument(path)
 

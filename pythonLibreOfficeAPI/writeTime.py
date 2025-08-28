@@ -1,5 +1,6 @@
 import sys
 import uno
+import os
 from pathlib import Path
 from com.sun.star.task import ErrorCodeIOException
 
@@ -65,6 +66,7 @@ def main_writeTime():
         return 
 
     path = Path(sys.argv[1])
+    os.makedirs(os.path.dirname(path), exist_ok=True)
 
     row_number = []
     time = []

@@ -1,22 +1,28 @@
 import os
-import time
 import functools
 from datetime import datetime
 from threading import Lock
 
-LOGGING_PATH = '/home/admin/SharedFolder'
+LOGGING_PATH = '/home/admin/SharedFolder/'
 
 LOGGING_FILENAME = 'logPython.txt'
 
-log_file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), LOGGING_PATH, LOGGING_FILENAME))
+
 _log_lock = Lock()
+
+def getLogPath():
+    path = LOGGING_PATH + str(datetime.now().year)
+    log_file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), path, LOGGING_FILENAME))
+    
+    return log_file_path
 
 def write_log(message):
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
     line = f"[{timestamp}] {message}\n"
 
+    os.makedirs(os.path.dirname(getLogPath()), exist_ok=True)
     with _log_lock:
-        with open(log_file_path, 'a') as f:
+        with open(getLogPath(), 'a') as f:
             f.write(line)
 
 def log_function(func):

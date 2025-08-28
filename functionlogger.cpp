@@ -11,6 +11,19 @@ FunctionLogger::FunctionLogger(const QString path, const QString &functionName)
     writeLog(path, "Entering function: " + functionName);
 }
 
+QString FunctionLogger::getPath()
+{
+    QString path = "/home/admin/SharedFolder/";
+    path += QString::number(QDate::currentDate().year()) + "/";
+
+    return path;
+}
+
+QString FunctionLogger::getLoggingPath()
+{
+    return getPath() + "logCpp.txt";
+}
+
 FunctionLogger::~FunctionLogger()
 {
     writeLog(path, "Exiting function: " + functionName);
@@ -21,6 +34,20 @@ void FunctionLogger::writeLog(const QString path, const QString &msg)
     if(!ENABLE_LOGGING)
     {
         return;
+    }
+
+    QFileInfo fileInfo(path);
+    QDir dir = fileInfo.dir();
+    if(!dir.exists())
+    {
+        if(dir.mkpath("."))
+        {
+            qDebug() << "Create folder: " << dir.absolutePath();
+        }
+        else
+        {
+            qDebug() << "Failed to create folder: " <<dir.absolutePath();
+        }
     }
 
     static QMutex mutex;

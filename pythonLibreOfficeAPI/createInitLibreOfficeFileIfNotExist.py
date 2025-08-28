@@ -133,10 +133,11 @@ def main_createInitLibreOfficeFileIfNotExist():
         return 
 
     path = Path(sys.argv[1])
+    os.makedirs(os.path.dirname(path), exist_ok=True)
 
     if os.path.exists(path):
         print("Path already exists!")
-        return
+        return  
 
     # Creatin new .ods file failed -> Copy template instead
     # I think this issue occurs because you have to start the libreOffice-Server with other args
