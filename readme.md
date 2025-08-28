@@ -79,3 +79,22 @@ kill <PID>
 sudo apt install telnet
 telnet 127.0.0.1 2002 // Check for libreOffice-Server
 ```
+
+**Autostart + Desktop Entry:**
+```
+nano ~/Desktop/ZeitsystemStarten@.desktop
+[Desktop Entry]
+Type=Application
+Name=ZeitsystemStarten
+Exec=/home/admin/Desktop/build-TimeStampTracker-Desktop-Debug/TimeStampTracker
+Terminal=true
+
+chmod +x ~/Desktop/ZeitsystemStarten@.desktop
+
+mkdir -p ~/.config/autostart
+
+cp ~/Desktop/ZeitsystemStarten@.desktop ~/.config/autostart/
+
+chmod +x ~/.config/autostart/ZeitsystemStarten@.desktop
+
+```

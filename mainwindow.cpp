@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Autostart hinzufügen vom System
 // Write errors per mail -> maybe better use a unsafe mail without 2 factor (Am besten ein Python script schreiben)
 // Daily send a backup per mail
 // Mitarbeiter solllen im nachhinein geordnet werden können. Dies soll passieren durch eine Zahl vor jedem Namen. Dann anch Weißen und nicht weißen hintergrund bei erstellung eines sheets sortieren. Liste der Mitarbeiter soll nach ihrer uID sortiert werden.
