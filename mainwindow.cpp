@@ -2,8 +2,7 @@
 #include "ui_mainwindow.h"
 
 // toDo List:
-// Write errors per mail -> maybe better use a unsafe mail without 2 factor (Am besten ein Python script schreiben)
-// Daily send a backup per mail
+// Zähler einführen, welcher immer um 0,5 nach oben zählt wenn ein Vormittag oder nachmittag nich gearbeitet wurde
 // Mitarbeiter solllen im nachhinein geordnet werden können. Dies soll passieren durch eine Zahl vor jedem Namen. Dann anch Weißen und nicht weißen hintergrund bei erstellung eines sheets sortieren. Liste der Mitarbeiter soll nach ihrer uID sortiert werden.
 // Wenn keine zeiten in der Zeiten liste sind dann nach einer Minute auch die Daten von LibreOffice ziehen
 // check4newDay() -> list_bufferedTimes should be empty or a email should be send!
@@ -498,6 +497,10 @@ void MainWindow::check4newDay()
     if(lastCheckedDate != currentDate)
     {
         LOG_FUNCTION();
+
+        // Backup libreoffice database via mail and delete old backups
+        ExcelInterface::deleteEmail();
+        ExcelInterface::sendEmail();
 
         lastCheckedDate = currentDate;
         ExcelInterface::restartLibreOfficeServer(); // Restart server because libre office is very unstable

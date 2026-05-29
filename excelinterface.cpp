@@ -294,3 +294,24 @@ void ExcelInterface::writeBufferedTimes2database(QList<BufferedTime> *list_buffe
         FunctionLogger::writeLog(FunctionLogger::getLoggingPath(), "    NO SUCCESS");
     }
 }
+
+void ExcelInterface::deleteEmail()
+{
+    LOG_FUNCTION();
+
+    QStringList params;
+    params << PATH_DELETE_EMAIL;
+
+    runPythonProcess(params);
+}
+
+void ExcelInterface::sendEmail()
+{
+    LOG_FUNCTION();
+
+    QStringList params;
+    params << PATH_SEND_EMAIL;
+    params << getPath2LibreOfficeFile();
+
+    PythonOutput outputs = runPythonProcess(params);
+}

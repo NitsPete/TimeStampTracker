@@ -20,6 +20,8 @@ const QString PATH_GET_DATA = PATH + "readData.py";
 const QString PATH_WRITE_TIME = PATH + "writeTime.py";
 const QString PATH_INIT_LIBRE_OFFICE_FILE = PATH + "createInitLibreOfficeFileIfNotExist.py";
 const QString PATH_INIT_LiBRE_OFFICE_SHEET = PATH + "createNewSheet.py";
+const QString PATH_SEND_EMAIL = PATH + "sendEmail.py";
+const QString PATH_DELETE_EMAIL = PATH + "deleteEmail.py";
 
 const int SUCCESS = 0;
 const int FAILED_TO_SAVE_FILE = 1;
@@ -55,6 +57,9 @@ public:
     static BufferedTime addCheckInTime(Employee *employee, QTime checkInTime);
     static BufferedTime addCheckOutTime(Employee *employee, QTime checkOutTime);
     static void writeBufferedTimes2database(QList<BufferedTime> *list_bufferedTimes);
+
+    static void deleteEmail(); // Delete old backups
+    static void sendEmail(); // Send backup via mail
 
 private:
     enum EmployeeData
